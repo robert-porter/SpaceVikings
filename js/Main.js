@@ -21,14 +21,13 @@ var main = function () {
 	requestAnimationFrame(main);
 };
 
-var then = Date.now();
-main();
-
-
 var update = function (deltaTime) {
-	
+	console.log("sfs");
 }
 
 var render = function (deltaTime) {
 	
 }
+
+var then = Date.now();
+main();
