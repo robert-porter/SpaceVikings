@@ -30,7 +30,10 @@ Player.prototype.update = function (deltaTime) {
         var now = Date.now();
         if (now - this.lastShotTime >= this.shotInterval) {
             this.lastShotTime = now;
-            Game.addGameObject(new Bullet(this.x, this.y));
+			var bullet = new Bullet();
+			bullet.x = this.x + this.width / 2.0 - bullet.width / 2.0;
+			bullet.y = this.y;
+            Game.addGameObject(bullet);
         }
     }
 

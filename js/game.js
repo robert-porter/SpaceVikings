@@ -69,11 +69,10 @@ var Game = {
 
         View.init(window.innerWidth, window.innerHeight);
 
-        Spawner.init();
-
-        this.gameObjects[0] = new Player(50, 500);
-        this.player = this.gameObjects[0];
-
+		
+        this.player = new Player(50, 500);
+        this.gameObjects.push(this.player);
+		Spawner.init();
 
         window.addEventListener('keyup', function (event) { Key.onKeyup(event); }, false);
         window.addEventListener('keydown', function (event) { Key.onKeydown(event); }, false);
@@ -109,19 +108,22 @@ var Game = {
     },
 
     collisions: function () {
-        for (var i = 0; i < this.gameObjects.length - 1; i++) {
-            for (var j = i + 1; j < this.gameObjects.length; j++) {
-                if (intersect(this.gameObjects[i], this.gameObjects[j]) &&
-                    ((this.gameObjects[i].constructor == Invader && this.gameObjects[j].constructor == Bullet) ||
-                    (this.gameObjects[i].constructor == Bullet && this.gameObjects[j].constructor == Invader))) {
-
-                     this.gameObjects[i].dead = true;
-                    this.gameObjects[j].dead = true;
+	
+        for (var i = 0; i < this.getInvaders().length; i++) {
+            for (var j = 0; j < this.getBullets().length; j++) {
+                if (intersect(this.getInvaders()[i], this.getBullets()[j])) {
+                    this.getInvaders()[i].dead = true;
+                    this.getBullets()[j].dead = true;
                 }
             }
         }
     },
-
+	getBullets: function(){ 
+		return this.gameObjects.filter(function(o) { return o.constructor == Bullet; });
+	},
+	getInvaders: function() {
+		return this.gameObjects.filter(function(o) { return o.constructor == Invader; });
+	},
     render: function (deltaTime) {
         View.clear();
 
