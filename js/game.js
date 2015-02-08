@@ -73,6 +73,12 @@ var Game = {
         this.player = new Player(50, 500);
         this.gameObjects.push(this.player);
 		Spawner.init();
+		
+		var bunker = null;
+		for(var x = 0; x < 4; x++) {
+			bunker = new Bunker(100 + x * 100, 350, 50, 50);
+			this.gameObjects.push(bunker);
+		}
 
         window.addEventListener('keyup', function (event) { Key.onKeyup(event); }, false);
         window.addEventListener('keydown', function (event) { Key.onKeydown(event); }, false);
@@ -117,12 +123,21 @@ var Game = {
                 }
             }
         }
+		
+		for(i = 0; i < this.getBunkers().length; i++) {
+			for(j = 0; j < this.getBullets().length; j++) {
+				this.getBunkers()[i].bulletCollision(this.getBullets()[j]);
+			}
+		}
     },
 	getBullets: function(){ 
 		return this.gameObjects.filter(function(o) { return o.constructor == Bullet; });
 	},
 	getInvaders: function() {
 		return this.gameObjects.filter(function(o) { return o.constructor == Invader; });
+	},
+	getBunkers: function() {
+		return this.gameObjects.filter(function(o) { return o.constructor == Bunker; });
 	},
     render: function (deltaTime) {
         View.clear();
