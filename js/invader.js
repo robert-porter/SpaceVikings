@@ -17,6 +17,20 @@ function Invader(x, y) {
     this.moveStart = Date.now();
     this.moveDownTime = 1000;
 	this.moveLeftRightTime = 6000;
+
+}
+
+function AudioBank(file, count) {
+	this.bank = [];
+	for(var i = 0; i < count; i++) {
+		this.bank[i] = new Audio(file);
+	}
+	this.last = 0;
+}
+
+AudioBank.prototype.play = function() {
+	this.last = (this.last + 1) % this.bank.length;
+	this.bank[this.last].play();
 }
 
 var InvadersUpdater = {
@@ -28,6 +42,11 @@ var InvadersUpdater = {
     DOWN_TO_LEFT: 2,
     DOWN_TO_RIGHT: 3,
     dir:0,
+	audio: [new AudioBank("audio/snd1.mp3", 4),
+			new AudioBank("audio/snd2.mp3", 4),
+			new AudioBank("audio/snd3.mp3", 4),
+			new AudioBank("audio/snd4.mp3", 4)	],
+	currentAudio: 0,
 
 	init: function() {
 		this.moveInterval = 1000;
@@ -41,6 +60,9 @@ var InvadersUpdater = {
 		var moveTime = now - this.moveStart;
 		
 		if(moveTime > this.moveInterval) {
+			this.currentAudio = (this.currentAudio + 1) % this.audio.length;
+			this.audio[this.currentAudio].play();
+			
 			if (this.dir == this.RIGHT) {
 				invaders.forEach(function(o) { o.x = o.x + 10; });
 			}
