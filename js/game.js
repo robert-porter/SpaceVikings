@@ -42,6 +42,7 @@ var View = {
         this.canvas.width = w;
         this.canvas.height = h;
         document.body.appendChild(this.canvas);
+
     },
 
     clear: function (color) {
@@ -55,13 +56,23 @@ var View = {
 
         // Restore the transform
         this.ctx.restore();
-    }
+    }, 
+	drawPoints: function(points) {
+		this.ctx.font="20px Andale Mono";
+		this.ctx.fillText("POINTS: " + points, 10, 50);
+	}, 
+	drawLives: function(lives) {
+		this.ctx.font = "20px Andale Mono";
+		this.ctx.fillText("LIVES: " + lives, 500, 50);	
+	}
 };
 
 var Game = {
     then: 0,
     gameObjects: [],
     player: null,
+	points: 0,
+	lives: 0,
 
     init: function () {
         requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame ||
@@ -69,20 +80,31 @@ var Game = {
 
         View.init(window.innerWidth, window.innerHeight);
 
+        window.addEventListener('keyup', function (event) { Key.onKeyup(event); }, false);
+        window.addEventListener('keydown', function (event) { Key.onKeydown(event); }, false);
+		
+		this.startLevel();
+		
+				
+
+    },
+	startLevel: function() {
+		this.gameObjects = [];
 		
         this.player = new Player(50, 500);
         this.gameObjects.push(this.player);
-		Spawner.init();
 		
 		var bunker = null;
 		for(var x = 0; x < 4; x++) {
 			bunker = new Bunker(100 + x * 100, 350, 50, 50);
 			this.gameObjects.push(bunker);
 		}
-
-        window.addEventListener('keyup', function (event) { Key.onKeyup(event); }, false);
-        window.addEventListener('keydown', function (event) { Key.onKeydown(event); }, false);
-    },
+		
+		InvadersUpdater.createInvaders();
+		InvadersUpdater.init();
+		
+		Spawner.init();
+	},
 
     frame: function () {
         var now = Date.now();
@@ -107,6 +129,9 @@ var Game = {
         Spawner.update(deltaTime);
 
         this.gameObjects.forEach(function (o) { o.update(deltaTime); });
+		var invaders = this.getInvaders();
+		InvadersUpdater.update(deltaTime, invaders);
+		
         this.collisions();
 
         // get rid of dead objects 
@@ -115,18 +140,54 @@ var Game = {
 
     collisions: function () {
 	
-        for (var i = 0; i < this.getInvaders().length; i++) {
-            for (var j = 0; j < this.getBullets().length; j++) {
-                if (intersect(this.getInvaders()[i], this.getBullets()[j])) {
-                    this.getInvaders()[i].dead = true;
-                    this.getBullets()[j].dead = true;
+		var invaders = this.getInvaders();
+		var bullets = this.getBullets();
+		var bunkers = this.getBunkers();
+		var bonusShips = this.getBonusShips();
+		var invaderBullets = this.getInvaderBullets();
+		
+        for (var i = 0; i < invaders.length; i++) {
+            for (var j = 0; j < bullets.length; j++) {
+                if (intersect(invaders[i], bullets[j])) {
+                    invaders[i].dead = true;
+                    bullets[j].dead = true;
+					InvadersUpdater.killInvader(invaders[i]);
+					this.points += 20;
                 }
             }
         }
 		
-		for(i = 0; i < this.getBunkers().length; i++) {
-			for(j = 0; j < this.getBullets().length; j++) {
-				this.getBunkers()[i].bulletCollision(this.getBullets()[j]);
+		for(i = 0; i < bunkers.length; i++) {
+			for(j = 0; j < bullets.length; j++) {
+				bunkers[i].bulletCollision(bullets[j]);
+			}
+			
+			for(j = 0; j < invaderBullets.length; j++){ 
+				bunkers[i].bulletCollision(invaderBullets[j]);
+			}
+		}
+		
+		for(i = 0; i < bonusShips.length; i++) {
+			for(j = 0; j < bullets.length; j++) {
+				if(intersect(bonusShips[i], bullets[j])) {
+					bonusShips[i].dead = true;
+					bullets[j].dead = true;
+					this.points += 100;
+				}
+			}
+		}
+		
+		for(i = 0; i < invaders.length; i++) {
+			if(invaders[i].y > 500) {
+				this.lives--;
+				this.startLevel();
+				return;
+			}
+		}
+		
+		for(i = 0; i < invaderBullets.length; i++) {
+			if(intersect(this.player, invaderBullets[i])) {
+				invaderBullets[i].dead = true;
 			}
 		}
     },
@@ -139,12 +200,20 @@ var Game = {
 	getBunkers: function() {
 		return this.gameObjects.filter(function(o) { return o.constructor == Bunker; });
 	},
+	getBonusShips: function() {
+		return this.gameObjects.filter(function(o) { return o.constructor == BonusShip; });
+	},
+	getInvaderBullets: function() {
+		return this.gameObjects.filter(function(o) { return o.constructor == InvaderBullet; });
+	},
     render: function (deltaTime) {
         View.clear();
 
         this.gameObjects.forEach(function (o) { o.draw(deltaTime); });
 
         World.debug_drawBorder();
+		View.drawPoints(this.points);
+		View.drawLives(this.lives);
     },
     addGameObject: function (o) {
         this.gameObjects.push(o);
