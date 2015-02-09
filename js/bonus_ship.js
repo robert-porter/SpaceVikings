@@ -8,3 +8,4 @@ function BonusShip(x, y) {
 	this.velY = 0;
 }
 
+

@@ -9,15 +9,6 @@ function Invader(x, y) {
     this.height = 32;
     this.velX = 0;
     this.velY = 0;
-    this.LEFT = 0;
-    this.RIGHT = 1;
-    this.DOWN_TO_LEFT = 2;
-    this.DOWN_TO_RIGHT = 3;
-    this.dir = this.DOWN_TO_LEFT;
-    this.moveStart = Date.now();
-    this.moveDownTime = 1000;
-	this.moveLeftRightTime = 6000;
-
 }
 
 function AudioBank(file, count) {
@@ -47,6 +38,7 @@ var InvadersUpdater = {
 			new AudioBank("audio/snd3.mp3", 4),
 			new AudioBank("audio/snd4.mp3", 4)	],
 	currentAudio: 0,
+	invadersGrid: [],
 
 	init: function() {
 		this.moveInterval = 1000;
@@ -54,7 +46,30 @@ var InvadersUpdater = {
 		this.numMoves = 0;
 		this.dir = 0;
 	},
+	createInvaders: function(){
+		var invader = null;
+		for(var y = 0; y < 5; y++) {
+			for (var x = 0; x < 11; x++) {
+				invader = new Invader(World.WIDTH * 0.5 - 250 + x * 50, y * 50);
+				invader.gridX = x;
+				invader.gridY = y;
+				Game.addGameObject(invader);
+				this.invadersGrid[x + y * 11] = true;
+			}
+		}
+	},
+	killInvader: function(invader) {
+		this.invadersGrid[invader.gridX + invader.gridY * 11] = false;
+	},
+	invadersInFront: function(invader) {
+		for(var y = 4; y > invader.gridY; y--) {
+			if(this.invadersGrid[invader.gridX + y * 11])
+				return true;
+		}
+		return false;
+	},
 	update: function(deltaTime, invaders) {
+		
 
 		var now = Date.now();
 		var moveTime = now - this.moveStart;
@@ -70,11 +85,19 @@ var InvadersUpdater = {
 				invaders.forEach(function(o) { o.x = o.x - 10; });
 			}
 			else if (this.dir == this.DOWN_TO_LEFT || this.dir == this.DOWN_TO_RIGHT) {
-				invaders.forEach(function(o) { o.y = o.y + 10; });
+				invaders.forEach(function(o) { o.y = o.y + 30; });
 			}							
 			
 			this.moveStart = now;
 			this.numMoves++;
+			
+			for(var i = 0; i < invaders.length; i++) {
+				if(!this.invadersInFront(invaders[i])) {
+					if(Math.random() < 0.05) {
+						Game.addGameObject(new InvaderBullet(invaders[i].x, invaders[i].y));
+					}
+				}
+			}
 		}
 		
 		if(this.numMoves == 10) {
@@ -99,42 +122,4 @@ var InvadersUpdater = {
 	
 };
 
-Invader.prototype.update = function (deltaTime) {
-	/*
-    var now = Date.now();
-    var moveTime = now - this.moveStart;
-
-    if (this.dir == this.RIGHT && moveTime > this.moveLeftRightTime) { // right boundary
-        this.dir = this.DOWN_TO_LEFT;
-        this.moveStart = now;
-    }
-    else if (this.dir == this.LEFT && moveTime > this.moveLeftRightTime) {
-        this.dir = this.DOWN_TO_RIGHT;
-        this.moveStart = now;
-    }
-    else if (this.dir == this.DOWN_TO_LEFT && moveTime > this.moveDownTime) {
-        this.dir = this.LEFT;
-        this.moveStart = now;
-    }
-    else if (this.dir == this.DOWN_TO_RIGHT && moveTime > this.moveDownTime) {
-        this.dir = this.RIGHT;
-        this.moveStart = now;
-    }
-
-    if (this.dir == this.RIGHT) {
-        this.velX = 40;
-        this.velY = 0;
-    }
-    else if (this.dir == this.LEFT) {
-        this.velX = -40;
-        this.velY = 0;
-    }
-    else if (this.dir == this.DOWN_TO_LEFT || this.dir == this.DOWN_TO_RIGHT) {
-        this.velX = 0;
-        this.velY = 40;
-    }
-
-    this.x = this.x + this.velX * deltaTime;
-    this.y = this.y + this.velY * deltaTime;
-	*/
-}
+Invader.prototype.update = function (deltaTime) { }

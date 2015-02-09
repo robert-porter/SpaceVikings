@@ -100,7 +100,9 @@ var Game = {
 			this.gameObjects.push(bunker);
 		}
 		
+		InvadersUpdater.createInvaders();
 		InvadersUpdater.init();
+		
 		Spawner.init();
 	},
 
@@ -142,12 +144,14 @@ var Game = {
 		var bullets = this.getBullets();
 		var bunkers = this.getBunkers();
 		var bonusShips = this.getBonusShips();
+		var invaderBullets = this.getInvaderBullets();
 		
         for (var i = 0; i < invaders.length; i++) {
             for (var j = 0; j < bullets.length; j++) {
                 if (intersect(invaders[i], bullets[j])) {
                     invaders[i].dead = true;
                     bullets[j].dead = true;
+					InvadersUpdater.killInvader(invaders[i]);
 					this.points += 20;
                 }
             }
@@ -156,6 +160,10 @@ var Game = {
 		for(i = 0; i < bunkers.length; i++) {
 			for(j = 0; j < bullets.length; j++) {
 				bunkers[i].bulletCollision(bullets[j]);
+			}
+			
+			for(j = 0; j < invaderBullets.length; j++){ 
+				bunkers[i].bulletCollision(invaderBullets[j]);
 			}
 		}
 		
@@ -176,6 +184,12 @@ var Game = {
 				return;
 			}
 		}
+		
+		for(i = 0; i < invaderBullets.length; i++) {
+			if(intersect(this.player, invaderBullets[i])) {
+				invaderBullets[i].dead = true;
+			}
+		}
     },
 	getBullets: function(){ 
 		return this.gameObjects.filter(function(o) { return o.constructor == Bullet; });
@@ -188,6 +202,9 @@ var Game = {
 	},
 	getBonusShips: function() {
 		return this.gameObjects.filter(function(o) { return o.constructor == BonusShip; });
+	},
+	getInvaderBullets: function() {
+		return this.gameObjects.filter(function(o) { return o.constructor == InvaderBullet; });
 	},
     render: function (deltaTime) {
         View.clear();
