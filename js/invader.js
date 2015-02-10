@@ -88,17 +88,45 @@ var InvadersGroup = {
 		return false;
 	},
 	tryShoot: function(deltaTime) {
-		for(var y = 0; y < this.NUM_ROWS; y++) {
-			for (var x = 0; x < this.NUM_COLS; x++) {
-				if(!this.invadersInFront(x, y)) {
+		// first one in each row get a chance to shoot.  
+		for (var x = 0; x < this.NUM_COLS; x++) {
+			for(var y = this.NUM_ROWS-1; y >= 0; y--) {
+				var index = x + y * this.NUM_COLS;
+				if(this.invaders[index].dead) {
+					continue;
+				}
+				else {
 					if(Math.random() < 0.05) {
-						var index = x + y * this.NUM_COLS;
+
 						var invaderBullet = new InvaderBullet(this.invaders[index].x, this.invaders[index].y);
 						Game.invaderBullets.push(invaderBullet);
 					}
+					break;
 				}
 			}
 		}		
+	},
+	getLeftBoundaryXIndex: function() { 
+		for (var x = 0; x < this.NUM_COLS; x++) {
+			for(var y = this.NUM_ROWS-1; y >= 0; y--) {
+				var index = x + y * this.NUM_COLS;
+				if(!this.invaders[index].dead) {
+					return x;
+				}
+			}
+		}
+		return -1;
+	},
+	getRightBoundaryXIndex: function() {
+		for (var x = this.NUM_COLS-1; x >= 0; x--) {
+			for(var y = this.NUM_ROWS-1; y >= 0; y--) {
+				var index = x + y * this.NUM_COLS;
+				if(!this.invaders[index].dead) {
+					return x;
+				}
+			}
+		}
+		return -1;
 	},
 	move: function(deltaTime) {
 		this.currentAudio = (this.currentAudio + 1) % this.audio.length;
@@ -120,6 +148,7 @@ var InvadersGroup = {
 		this.numMoves++;
 	
 		this.tryShoot();
+		this.tryTurn();
 	},
 	down: function(dir) {
 		if (dir == this.RIGHT) {
@@ -130,12 +159,14 @@ var InvadersGroup = {
 		}
 		
 	}, 
-	turn: function(dir) {
-		if (dir == this.DOWN_TO_LEFT) {
-			return this.LEFT;
+	tryTurn: function() {
+		if (this.dir == this.DOWN_TO_LEFT) {
+			this.dir = this.LEFT;
+			this.moveInterval = this.moveInterval * 0.7;
 		}
-		if (dir == this.DOWN_TO_RIGHT) {
-			return this.RIGHT;
+		if (this.dir == this.DOWN_TO_RIGHT) {
+			this.dir = this.RIGHT;
+			this.moveInterval = this.moveInterval * 0.7;
 		}	
 	},
 	update: function(deltaTime) {
@@ -148,13 +179,9 @@ var InvadersGroup = {
 			this.moveStart = now;
 		}
 		
-		// not correct, need to check for edge of map collision...
+		// not correct, need to check for edge of map collision... 10 is just arbitrary
 		if(this.numMoves == 10) {
 			this.dir = this.down(this.dir);
-		}
-		if(this.numMoves == 11) {
-			this.dir = this.turn(this.dir);
-			this.moveInterval = this.moveInterval * 0.7;
 			this.numMoves = 0;
 		}
 	}

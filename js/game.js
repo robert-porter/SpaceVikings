@@ -140,7 +140,7 @@ var Game = {
 		this.bullet.update(deltaTime);
 		this.invaderBullets.forEach(function (o) { o.update(deltaTime); });
 		this.bonusShip.update(deltaTime);
-		InvadersGroup.update(deltaTime, this.invaders);
+		InvadersGroup.update(deltaTime);
 		
         this.collisions();
 
