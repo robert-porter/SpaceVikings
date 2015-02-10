@@ -146,6 +146,11 @@ var Game = {
 		var bonusShips = this.getBonusShips();
 		var invaderBullets = this.getInvaderBullets();
 		
+		if(invaders.length == 0) {
+			this.startLevel();
+			return;
+		}
+		
         for (var i = 0; i < invaders.length; i++) {
             for (var j = 0; j < bullets.length; j++) {
                 if (intersect(invaders[i], bullets[j])) {

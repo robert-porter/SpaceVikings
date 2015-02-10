@@ -11,7 +11,7 @@ function Player(x, y) {
     this.velX = 0;
     this.velY = 0;
     this.lastShotTime = 0;
-    this.shotInterval = 500;
+    this.shotInterval = 200;
 }
 
 Player.prototype.update = function (deltaTime) {
