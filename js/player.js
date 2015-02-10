@@ -4,14 +4,14 @@ Player.prototype = Object.create(GameObject.prototype);
 Player.prototype.constructor = Player;
 
 function Player(x, y) {
+	GameObject.call(this);
     this.x = x;
     this.y = y;
     this.width = 32;
     this.height = 32;
     this.velX = 0;
     this.velY = 0;
-    this.lastShotTime = 0;
-    this.shotInterval = 200;
+	this.bullet = null;
 }
 
 Player.prototype.update = function (deltaTime) {
@@ -27,14 +27,11 @@ Player.prototype.update = function (deltaTime) {
     }
 
     if (Key.isDown(Key.SHOOT)) {
-        var now = Date.now();
-        if (now - this.lastShotTime >= this.shotInterval) {
-            this.lastShotTime = now;
-			var bullet = new Bullet();
-			bullet.x = this.x + this.width / 2.0 - bullet.width / 2.0;
-			bullet.y = this.y;
-            Game.addGameObject(bullet);
-        }
+		if(this.bullet.dead == true) {
+			this.bullet.dead = false;
+			this.bullet.x = this.x + this.width / 2.0 - this.bullet.width / 2.0;
+			this.bullet.y = this.y;
+		}
     }
 
     this.x = this.x + this.velX * deltaTime;

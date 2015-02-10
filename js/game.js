@@ -69,8 +69,12 @@ var View = {
 
 var Game = {
     then: 0,
-    gameObjects: [],
     player: null,
+	bullet: null,
+	invaders: [],
+	invaderBullets: [],
+	bunkers: [],
+	bunusShip: null,
 	points: 0,
 	lives: 0,
 
@@ -89,19 +93,24 @@ var Game = {
 
     },
 	startLevel: function() {
-		this.gameObjects = [];
+
+		this.bunkers = [];
 		
         this.player = new Player(50, 500);
-        this.gameObjects.push(this.player);
-		
+		this.bullet = new Bullet();
+		this.player.bullet = this.bullet;
+		this.player.bullet.dead = true;
+				
 		var bunker = null;
 		for(var x = 0; x < 4; x++) {
 			bunker = new Bunker(100 + x * 100, 350, 50, 50);
-			this.gameObjects.push(bunker);
+			this.bunkers.push(bunker);
 		}
 		
-		InvadersUpdater.createInvaders();
-		InvadersUpdater.init();
+		this.bonusShip = new BonusShip(0,0);
+		
+		InvadersGroup.createInvaders(); // TODO: some thing is wrong here, this is confusing
+		InvadersGroup.init(); 
 		
 		Spawner.init();
 	},
@@ -127,101 +136,72 @@ var Game = {
 
     update: function (deltaTime) {
         Spawner.update(deltaTime);
-
-        this.gameObjects.forEach(function (o) { o.update(deltaTime); });
-		var invaders = this.getInvaders();
-		InvadersUpdater.update(deltaTime, invaders);
+		this.player.update(deltaTime);
+		this.bullet.update(deltaTime);
+		this.invaderBullets.forEach(function (o) { o.update(deltaTime); });
+		this.bonusShip.update(deltaTime);
+		InvadersGroup.update(deltaTime, this.invaders);
 		
         this.collisions();
 
         // get rid of dead objects 
-        this.gameObjects = this.gameObjects.filter(function (o) { return !o.dead; });
+        this.invaderBullets = this.invaderBullets.filter(function (o) { return !o.dead; });
     },
 
     collisions: function () {
 	
-		var invaders = this.getInvaders();
-		var bullets = this.getBullets();
-		var bunkers = this.getBunkers();
-		var bonusShips = this.getBonusShips();
-		var invaderBullets = this.getInvaderBullets();
-		
-		if(invaders.length == 0) {
+		if(this.invaders.length == 0) {
 			this.startLevel();
 			return;
 		}
 		
-        for (var i = 0; i < invaders.length; i++) {
-            for (var j = 0; j < bullets.length; j++) {
-                if (intersect(invaders[i], bullets[j])) {
-                    invaders[i].dead = true;
-                    bullets[j].dead = true;
-					InvadersUpdater.killInvader(invaders[i]);
-					this.points += 20;
-                }
-            }
-        }
+		InvadersGroup.bulletCollision(this.bullet);
 		
-		for(i = 0; i < bunkers.length; i++) {
-			for(j = 0; j < bullets.length; j++) {
-				bunkers[i].bulletCollision(bullets[j]);
-			}
+		for(i = 0; i < this.bunkers.length; i++) {
+			if(!this.bullet.dead)
+				this.bunkers[i].bulletCollision(this.bullet);
 			
-			for(j = 0; j < invaderBullets.length; j++){ 
-				bunkers[i].bulletCollision(invaderBullets[j]);
+			for(j = 0; j < this.invaderBullets.length; j++){ 
+				this.bunkers[i].bulletCollision(this.invaderBullets[j]);
 			}
 		}
 		
-		for(i = 0; i < bonusShips.length; i++) {
-			for(j = 0; j < bullets.length; j++) {
-				if(intersect(bonusShips[i], bullets[j])) {
-					bonusShips[i].dead = true;
-					bullets[j].dead = true;
-					this.points += 100;
-				}
+		if(!this.bullet.dead) {
+			if(intersect(this.bonusShip, this.bullet)) {
+				this.bonusShip.dead = true;
+				this.bullet.dead = true;
+				this.points += 100;
 			}
 		}
+			
 		
-		for(i = 0; i < invaders.length; i++) {
-			if(invaders[i].y > 500) {
+		for(i = 0; i < this.invaders.length; i++) {
+			if(this.invaders[i].y > 500) {
 				this.lives--;
 				this.startLevel();
 				return;
 			}
-		}
+		}	
 		
-		for(i = 0; i < invaderBullets.length; i++) {
-			if(intersect(this.player, invaderBullets[i])) {
-				invaderBullets[i].dead = true;
+		for(i = 0; i < this.invaderBullets.length; i++) {
+			if(intersect(this.player, this.invaderBullets[i])) {
+				this.invaderBullets[i].dead = true;
 			}
 		}
     },
-	getBullets: function(){ 
-		return this.gameObjects.filter(function(o) { return o.constructor == Bullet; });
-	},
-	getInvaders: function() {
-		return this.gameObjects.filter(function(o) { return o.constructor == Invader; });
-	},
-	getBunkers: function() {
-		return this.gameObjects.filter(function(o) { return o.constructor == Bunker; });
-	},
-	getBonusShips: function() {
-		return this.gameObjects.filter(function(o) { return o.constructor == BonusShip; });
-	},
-	getInvaderBullets: function() {
-		return this.gameObjects.filter(function(o) { return o.constructor == InvaderBullet; });
-	},
     render: function (deltaTime) {
         View.clear();
 
-        this.gameObjects.forEach(function (o) { o.draw(deltaTime); });
-
+		this.player.draw(deltaTime);
+		this.bullet.draw(deltaTime);
+        this.invaders.forEach(function (o) { o.draw(deltaTime); });
+		this.invaderBullets.forEach(function (o) { o.draw(deltaTime); });
+		this.bunkers.forEach(function (o) { o.draw(deltaTime); });
+		this.bonusShip.draw(deltaTime);
+		
         World.debug_drawBorder();
 		View.drawPoints(this.points);
 		View.drawLives(this.lives);
-    },
-    addGameObject: function (o) {
-        this.gameObjects.push(o);
     }
 
 };
