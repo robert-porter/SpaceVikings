@@ -10,6 +10,9 @@ function GameObject(x, y, w, h) {
 }
 
 GameObject.prototype.draw = function (deltaTime) {
+	if(this.dead)
+		return;
+
     View.ctx.fillStyle = "#FF0000";
     View.ctx.fillRect(this.x, this.y, this.width, this.height);
 }

@@ -11,7 +11,7 @@ var Spawner = {
         var now = Date.now();
         if (now - this.lastBonusShipTime > this.bonusShipInterval) {
             this.lastBonusShipTime = now;
-			Game.addGameObject(new BonusShip(World.WIDTH, 20));
+			Game.bonusShip = new BonusShip(World.WIDTH, 20);
         }
 		
     }

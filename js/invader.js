@@ -3,12 +3,13 @@ Invader.prototype = Object.create(GameObject.prototype);
 Invader.prototype.constructor = Invader;
 
 function Invader(x, y) {
-    this.x = x;
-    this.y = y;
-    this.width = 32;
-    this.height = 32;
-    this.velX = 0;
-    this.velY = 0;
+	GameObject.call(this);
+	this.x = x;
+	this.y = y;
+	this.width = 32;
+	this.height = 32;
+	this.velX = 0;
+	this.velY = 0;
 }
 
 function AudioBank(file, count) {
@@ -24,21 +25,36 @@ AudioBank.prototype.play = function() {
 	this.bank[this.last].play();
 }
 
-var InvadersUpdater = {
-	moveInterval: 1000,
-	moveStart: Date.now(),
-	numMoves: 0,
+var InvadersGroup = {
+
 	LEFT: 0,
     RIGHT: 1,
     DOWN_TO_LEFT: 2,
     DOWN_TO_RIGHT: 3,
-    dir:0,
+	
+	NUM_ROWS: 5,
+	NUM_COLS: 11,
+	INVADER_WIDTH: 32,
+	INVADER_HEIGHT: 32,
+	CELL_WIDTH: 40, 
+	CELL_HEIGHT: 40,
+	
+	HORIZONTAL_MOVEMENT: 20, // should be a multiple the of size of an invader cell 
+	VERTICAL_MOVEMENT: 20, // does not need to be a multiple the of size of an invader cell 
+	
+	dir:0,
+	moveInterval: 1000,
+	moveStart: Date.now(),
+	numMoves: 0,
+	posX: 40,
+	posY: 0,
+	
 	audio: [new AudioBank("audio/snd1.mp3", 4),
 			new AudioBank("audio/snd2.mp3", 4),
 			new AudioBank("audio/snd3.mp3", 4),
 			new AudioBank("audio/snd4.mp3", 4)	],
 	currentAudio: 0,
-	invadersGrid: [],
+	invaders: [],
 
 	init: function() {
 		this.moveInterval = 1000;
@@ -47,76 +63,146 @@ var InvadersUpdater = {
 		this.dir = 0;
 	},
 	createInvaders: function(){
-		var invader = null;
-		for(var y = 0; y < 5; y++) {
-			for (var x = 0; x < 11; x++) {
-				invader = new Invader(World.WIDTH * 0.5 - 250 + x * 50, y * 50);
-				invader.gridX = x;
-				invader.gridY = y;
-				Game.addGameObject(invader);
-				this.invadersGrid[x + y * 11] = true;
+		this.invaders = [];
+		
+		for(var y = 0; y < this.NUM_ROWS; y++) {
+			for (var x = 0; x < this.NUM_COLS; x++) {
+				this.invaders[x + y * this.NUM_COLS] = true;
 			}
 		}
 	},
-	killInvader: function(invader) {
-		this.invadersGrid[invader.gridX + invader.gridY * 11] = false;
+	bulletCollision: function(bullet) {
+		
+		if(bullet.dead)
+			return;
+		
+		for(var y = 0; y < this.NUM_ROWS; y++) {
+			for (var x = 0; x < this.NUM_COLS; x++) {
+				
+				if(this.invaders[x + y * this.NUM_COLS]) {
+					var invaderX = this.posX + x * this.CELL_WIDTH + (this.INVADER_WIDTH - this.CELL_WIDTH) / 2;
+					var invaderY = this.posY + y * this.CELL_HEIGHT + (this.INVADER_HEIGHT - this.CELL_HEIGHT) / 2;
+					var gameObject = new GameObject(invaderX, invaderY, this.INVADER_WIDTH, this.INVADER_HEIGHT);
+					
+					if (intersect(gameObject, bullet)) {
+						this.invaders[x + y * this.NUM_COLS] = false;
+						bullet.dead = true;
+						Game.points += 20;
+					}
+				}
+				
+			}
+		}
 	},
-	invadersInFront: function(invader) {
-		for(var y = 4; y > invader.gridY; y--) {
-			if(this.invadersGrid[invader.gridX + y * 11])
+	invadersInFront: function(col, row) {
+		for(var y = this.NUM_ROWS-1; y > row; y--) {
+			if(!this.invaders[col + y * this.NUM_COLS])
 				return true;
 		}
 		return false;
 	},
-	update: function(deltaTime, invaders) {
+	tryShoot: function(deltaTime) {
+		// first one in each row get a chance to shoot.  
+		for (var x = 0; x < this.NUM_COLS; x++) {
+			for(var y = this.NUM_ROWS-1; y >= 0; y--) {
+				var index = x + y * this.NUM_COLS;
+				if(this.invaders[index]) {
+					continue;
+				}
+				else {
+					if(Math.random() < 0.05) {
+						
+						var bulletX = this.posX + x * this.CELL_WIDTH + (this.INVADER_WIDTH - this.CELL_WIDTH) / 2 + this.INVADER_WIDTH / 2;
+						var bulletY = this.posY + x * this.CELL_HEIGHT + (this.INVADER_HEIGHT - this.CELL_HEIGHT) / 2 + this.INVADER_HEIGHT / 2;
+						var invaderBullet = new InvaderBullet(bulletX, bulletY);
+						Game.invaderBullets.push(invaderBullet);
+					}
+					break;
+				}
+			}
+		}		
+	},
+	getLeftBoundaryXIndex: function() { 
+		for (var x = 0; x < this.NUM_COLS; x++) {
+			for(var y = this.NUM_ROWS-1; y >= 0; y--) {
+				var index = x + y * this.NUM_COLS;
+				if(this.invaders[index]) {
+					return x;
+				}
+			}
+		}
+		return -1;
+	},
+	getRightBoundaryXIndex: function() {
+		for (var x = this.NUM_COLS-1; x >= 0; x--) {
+			for(var y = this.NUM_ROWS-1; y >= 0; y--) {
+				var index = x + y * this.NUM_COLS;
+				if(this.invaders[index]) {
+					return x;
+				}
+			}
+		}
+		return -1;
+	},
+	move: function(deltaTime) {
+		this.currentAudio = (this.currentAudio + 1) % this.audio.length;
+		this.audio[this.currentAudio].play();
 		
+		var leftIndex = this.getLeftBoundaryXIndex();
+		var rightIndex = this.getRightBoundaryXIndex();
+		if(this.posX + leftIndex * this.CELL_WIDTH <= this.HORIZONTAL_MOVEMENT && this.dir != this.RIGHT) {
+			this.dir = this.DOWN_TO_RIGHT;
+		}
+		
+		if(this.posX + rightIndex * this.CELL_WIDTH + this.CELL_WIDTH >= World.WIDTH && this.dir != this.LEFT) {
+			this.dir = this.DOWN_TO_LEFT;
+		}
+		
+		
+		if (this.dir == this.RIGHT) {
+			this.posX += this.HORIZONTAL_MOVEMENT; 
+		}
+		else if (this.dir == this.LEFT) {
+			this.posX -= this.HORIZONTAL_MOVEMENT;
+		}
+		else if (this.dir == this.DOWN_TO_LEFT)  {
+			this.posY += this.VERTICAL_MOVEMENT; 
+			this.dir = this.LEFT;
+			this.moveInterval = this.moveInterval * 0.7;
+		}							
+		else if(this.dir == this.DOWN_TO_RIGHT) {
+			this.posY += this.VERTICAL_MOVEMENT;
+			this.dir = this.RIGHT;
+			this.moveInterval = this.moveInterval * 0.7;
+		}
+		
+		this.tryShoot();
+		
+	},
+	update: function(deltaTime) {
 
 		var now = Date.now();
 		var moveTime = now - this.moveStart;
 		
 		if(moveTime > this.moveInterval) {
-			this.currentAudio = (this.currentAudio + 1) % this.audio.length;
-			this.audio[this.currentAudio].play();
-			
-			if (this.dir == this.RIGHT) {
-				invaders.forEach(function(o) { o.x = o.x + 10; });
-			}
-			else if (this.dir == this.LEFT) {
-				invaders.forEach(function(o) { o.x = o.x - 10; });
-			}
-			else if (this.dir == this.DOWN_TO_LEFT || this.dir == this.DOWN_TO_RIGHT) {
-				invaders.forEach(function(o) { o.y = o.y + 30; });
-			}							
-			
+			this.move();
 			this.moveStart = now;
-			this.numMoves++;
-			
-			for(var i = 0; i < invaders.length; i++) {
-				if(!this.invadersInFront(invaders[i])) {
-					if(Math.random() < 0.05) {
-						Game.addGameObject(new InvaderBullet(invaders[i].x, invaders[i].y));
-					}
-				}
-			}
 		}
 		
-		if(this.numMoves == 10) {
-			if (this.dir == this.RIGHT) {
-				this.dir = this.DOWN_TO_LEFT;
+
+	}, 
+	draw: function() {
+		for(var y = 0; y < this.NUM_ROWS; y++) {
+			for (var x = 0; x < this.NUM_COLS; x++) {
+				if(this.invaders[x + y * this.NUM_COLS]) {
+
+					var invaderX = this.posX + x * this.CELL_WIDTH + (this.INVADER_WIDTH - this.CELL_WIDTH) / 2;
+					var invaderY = this.posY + y * this.CELL_HEIGHT + (this.INVADER_HEIGHT - this.CELL_HEIGHT) / 2;
+
+					View.ctx.fillStyle = "#FF0000";
+					View.ctx.fillRect(invaderX, invaderY, this.INVADER_WIDTH, this.INVADER_HEIGHT);
+				}
 			}
-			else if (this.dir == this.LEFT) {
-				this.dir = this.DOWN_TO_RIGHT;
-			}
-		}
-		if(this.numMoves == 11) {
-			if (this.dir == this.DOWN_TO_LEFT) {
-				this.dir = this.LEFT;
-			}
-			else if (this.dir == this.DOWN_TO_RIGHT) {
-				this.dir = this.RIGHT;
-			}
-			this.numMoves = 0;
-			this.moveInterval = this.moveInterval * 0.7;
 		}
 	}
 	
