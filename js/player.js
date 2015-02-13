@@ -12,10 +12,13 @@ function Player(x, y) {
     this.velX = 0;
     this.velY = 0;
 	this.bullet = null;
+
+    this.sprite = new Image();
+    this.sprite.src = "images/Invader.png";
 }
 
 Player.prototype.update = function (deltaTime) {
-
+    this.test = 50;
     if (Key.isDown(Key.LEFT)) {
         this.velX = -50;
     }

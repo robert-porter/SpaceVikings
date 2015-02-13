@@ -10,6 +10,8 @@ function Invader(x, y) {
 	this.height = 32;
 	this.velX = 0;
 	this.velY = 0;
+    this.sprite = new Image();
+    this.sprite.src = "images/Invader.png";
 }
 
 function AudioBank(file, count) {
@@ -49,10 +51,10 @@ var InvadersGroup = {
 	posX: 40,
 	posY: 0,
 	
-	audio: [new AudioBank("audio/snd1.mp3", 4),
-			new AudioBank("audio/snd2.mp3", 4),
-			new AudioBank("audio/snd3.mp3", 4),
-			new AudioBank("audio/snd4.mp3", 4)	],
+	// audio: [new AudioBank("audio/snd1.mp3", 4),
+	// 		new AudioBank("audio/snd2.mp3", 4),
+	// 		new AudioBank("audio/snd3.mp3", 4),
+	// 		new AudioBank("audio/snd4.mp3", 4)	],
 	currentAudio: 0,
 	invaders: [],
 
@@ -145,8 +147,8 @@ var InvadersGroup = {
 		return -1;
 	},
 	move: function(deltaTime) {
-		this.currentAudio = (this.currentAudio + 1) % this.audio.length;
-		this.audio[this.currentAudio].play();
+		// this.currentAudio = (this.currentAudio + 1) % this.audio.length;
+		// this.audio[this.currentAudio].play();
 		
 		var leftIndex = this.getLeftBoundaryXIndex();
 		var rightIndex = this.getRightBoundaryXIndex();

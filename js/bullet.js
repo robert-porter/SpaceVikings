@@ -5,6 +5,9 @@ Bullet.prototype.constructor = Bullet;
 function Bullet(x, y) {
     GameObject.call(this, x, y, 12, 12);
     this.velY = -700;
+
+    this.sprite = new Image();
+    this.sprite.src = "images/Bullet.png";
 }
 
 Bullet.prototype.update = function(deltaTime) { 
