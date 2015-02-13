@@ -34,14 +34,20 @@ var InvadersGroup = {
 	
 	NUM_ROWS: 5,
 	NUM_COLS: 11,
+	INVADER_WIDTH: 32,
+	INVADER_HEIGHT: 32,
+	CELL_WIDTH: 40, 
+	CELL_HEIGHT: 40,
 	
-	HORIZONTAL_MOVEMENT: 12, // should be a multiple the of size of an invader cell 
-	VERTICAL_MOVEMENT: 12, // does not need to be a multiple the of size of an invader cell 
+	HORIZONTAL_MOVEMENT: 20, // should be a multiple the of size of an invader cell 
+	VERTICAL_MOVEMENT: 20, // does not need to be a multiple the of size of an invader cell 
 	
 	dir:0,
 	moveInterval: 1000,
 	moveStart: Date.now(),
 	numMoves: 0,
+	posX: 40,
+	posY: 0,
 	
 	audio: [new AudioBank("audio/snd1.mp3", 4),
 			new AudioBank("audio/snd2.mp3", 4),
@@ -57,32 +63,40 @@ var InvadersGroup = {
 		this.dir = 0;
 	},
 	createInvaders: function(){
-		Game.invaders = [];
+		this.invaders = [];
 		
-		var invader = null;
 		for(var y = 0; y < this.NUM_ROWS; y++) {
 			for (var x = 0; x < this.NUM_COLS; x++) {
-				invader = new Invader(World.WIDTH * 0.5 - 250 + x * 50, y * 50);
-				this.invaders.push(invader);
-				Game.invaders.push(invader);
+				this.invaders[x + y * this.NUM_COLS] = true;
 			}
 		}
 	},
 	bulletCollision: function(bullet) {
-		for (var i = 0; i < this.invaders.length; i++) {
-			if(!bullet.dead && !this.invaders[i].dead) {
-				if (intersect(this.invaders[i], bullet)) {
-					this.invaders[i].dead = true;
-					bullet.dead = true;
-					Game.points += 20;
+		
+		if(bullet.dead)
+			return;
+		
+		for(var y = 0; y < this.NUM_ROWS; y++) {
+			for (var x = 0; x < this.NUM_COLS; x++) {
+				
+				if(this.invaders[x + y * this.NUM_COLS]) {
+					var invaderX = this.posX + x * this.CELL_WIDTH + (this.INVADER_WIDTH - this.CELL_WIDTH) / 2;
+					var invaderY = this.posY + y * this.CELL_HEIGHT + (this.INVADER_HEIGHT - this.CELL_HEIGHT) / 2;
+					var gameObject = new GameObject(invaderX, invaderY, this.INVADER_WIDTH, this.INVADER_HEIGHT);
+					
+					if (intersect(gameObject, bullet)) {
+						this.invaders[x + y * this.NUM_COLS] = false;
+						bullet.dead = true;
+						Game.points += 20;
+					}
 				}
+				
 			}
-            
 		}
 	},
 	invadersInFront: function(col, row) {
 		for(var y = this.NUM_ROWS-1; y > row; y--) {
-			if(!this.invaders[col + y * this.NUM_COLS].dead)
+			if(!this.invaders[col + y * this.NUM_COLS])
 				return true;
 		}
 		return false;
@@ -92,13 +106,15 @@ var InvadersGroup = {
 		for (var x = 0; x < this.NUM_COLS; x++) {
 			for(var y = this.NUM_ROWS-1; y >= 0; y--) {
 				var index = x + y * this.NUM_COLS;
-				if(this.invaders[index].dead) {
+				if(this.invaders[index]) {
 					continue;
 				}
 				else {
 					if(Math.random() < 0.05) {
-
-						var invaderBullet = new InvaderBullet(this.invaders[index].x, this.invaders[index].y);
+						
+						var bulletX = this.posX + x * this.CELL_WIDTH + (this.INVADER_WIDTH - this.CELL_WIDTH) / 2 + this.INVADER_WIDTH / 2;
+						var bulletY = this.posY + x * this.CELL_HEIGHT + (this.INVADER_HEIGHT - this.CELL_HEIGHT) / 2 + this.INVADER_HEIGHT / 2;
+						var invaderBullet = new InvaderBullet(bulletX, bulletY);
 						Game.invaderBullets.push(invaderBullet);
 					}
 					break;
@@ -110,7 +126,7 @@ var InvadersGroup = {
 		for (var x = 0; x < this.NUM_COLS; x++) {
 			for(var y = this.NUM_ROWS-1; y >= 0; y--) {
 				var index = x + y * this.NUM_COLS;
-				if(!this.invaders[index].dead) {
+				if(this.invaders[index]) {
 					return x;
 				}
 			}
@@ -121,7 +137,7 @@ var InvadersGroup = {
 		for (var x = this.NUM_COLS-1; x >= 0; x--) {
 			for(var y = this.NUM_ROWS-1; y >= 0; y--) {
 				var index = x + y * this.NUM_COLS;
-				if(!this.invaders[index].dead) {
+				if(this.invaders[index]) {
 					return x;
 				}
 			}
@@ -132,42 +148,36 @@ var InvadersGroup = {
 		this.currentAudio = (this.currentAudio + 1) % this.audio.length;
 		this.audio[this.currentAudio].play();
 		
-		var HORIZONTAL_MOVEMENT = this.HORIZONTAL_MOVEMENT;
-		var VERTICAL_MOVEMENT = this.VERTICAL_MOVEMENT;
+		var leftIndex = this.getLeftBoundaryXIndex();
+		var rightIndex = this.getRightBoundaryXIndex();
+		if(this.posX + leftIndex * this.CELL_WIDTH <= this.HORIZONTAL_MOVEMENT && this.dir != this.RIGHT) {
+			this.dir = this.DOWN_TO_RIGHT;
+		}
+		
+		if(this.posX + rightIndex * this.CELL_WIDTH + this.CELL_WIDTH >= World.WIDTH && this.dir != this.LEFT) {
+			this.dir = this.DOWN_TO_LEFT;
+		}
+		
 		
 		if (this.dir == this.RIGHT) {
-			this.invaders.forEach(function(o) { o.x = o.x + HORIZONTAL_MOVEMENT; });
+			this.posX += this.HORIZONTAL_MOVEMENT; 
 		}
 		else if (this.dir == this.LEFT) {
-			this.invaders.forEach(function(o) { o.x = o.x - HORIZONTAL_MOVEMENT; });
+			this.posX -= this.HORIZONTAL_MOVEMENT;
 		}
-		else if (this.dir == this.DOWN_TO_LEFT || this.dir == this.DOWN_TO_RIGHT) {
-			this.invaders.forEach(function(o) { o.y = o.y + VERTICAL_MOVEMENT; });
-		}							
-		
-		this.numMoves++;
-	
-		this.tryShoot();
-		this.tryTurn();
-	},
-	down: function(dir) {
-		if (dir == this.RIGHT) {
-			return this.DOWN_TO_LEFT;
-		}
-		else if (dir == this.LEFT) {
-			return this.DOWN_TO_RIGHT;
-		}
-		
-	}, 
-	tryTurn: function() {
-		if (this.dir == this.DOWN_TO_LEFT) {
+		else if (this.dir == this.DOWN_TO_LEFT)  {
+			this.posY += this.VERTICAL_MOVEMENT; 
 			this.dir = this.LEFT;
 			this.moveInterval = this.moveInterval * 0.7;
-		}
-		if (this.dir == this.DOWN_TO_RIGHT) {
+		}							
+		else if(this.dir == this.DOWN_TO_RIGHT) {
+			this.posY += this.VERTICAL_MOVEMENT;
 			this.dir = this.RIGHT;
 			this.moveInterval = this.moveInterval * 0.7;
-		}	
+		}
+		
+		this.tryShoot();
+		
 	},
 	update: function(deltaTime) {
 
@@ -179,10 +189,20 @@ var InvadersGroup = {
 			this.moveStart = now;
 		}
 		
-		// not correct, need to check for edge of map collision... 10 is just arbitrary
-		if(this.numMoves == 10) {
-			this.dir = this.down(this.dir);
-			this.numMoves = 0;
+
+	}, 
+	draw: function() {
+		for(var y = 0; y < this.NUM_ROWS; y++) {
+			for (var x = 0; x < this.NUM_COLS; x++) {
+				if(this.invaders[x + y * this.NUM_COLS]) {
+
+					var invaderX = this.posX + x * this.CELL_WIDTH + (this.INVADER_WIDTH - this.CELL_WIDTH) / 2;
+					var invaderY = this.posY + y * this.CELL_HEIGHT + (this.INVADER_HEIGHT - this.CELL_HEIGHT) / 2;
+
+					View.ctx.fillStyle = "#FF0000";
+					View.ctx.fillRect(invaderX, invaderY, this.INVADER_WIDTH, this.INVADER_HEIGHT);
+				}
+			}
 		}
 	}
 	

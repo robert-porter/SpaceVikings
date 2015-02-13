@@ -71,7 +71,6 @@ var Game = {
     then: 0,
     player: null,
 	bullet: null,
-	invaders: [],
 	invaderBullets: [],
 	bunkers: [],
 	bunusShip: null,
@@ -96,10 +95,10 @@ var Game = {
 
 		this.bunkers = [];
 		
-        this.player = new Player(50, 500);
+        this.player = new Player(50, 500);                            
 		this.bullet = new Bullet();
 		this.player.bullet = this.bullet;
-		this.player.bullet.dead = true;
+		this.bullet.dead = true;
 				
 		var bunker = null;
 		for(var x = 0; x < 4; x++) {
@@ -108,8 +107,9 @@ var Game = {
 		}
 		
 		this.bonusShip = new BonusShip(0,0);
+		this.bonusShip.dead = true;
 		
-		InvadersGroup.createInvaders(); // TODO: some thing is wrong here, this is confusing
+		InvadersGroup.createInvaders(); // TODO: this is confusing
 		InvadersGroup.init(); 
 		
 		Spawner.init();
@@ -149,11 +149,6 @@ var Game = {
     },
 
     collisions: function () {
-	
-		if(this.invaders.length == 0) {
-			this.startLevel();
-			return;
-		}
 		
 		InvadersGroup.bulletCollision(this.bullet);
 		
@@ -174,7 +169,7 @@ var Game = {
 			}
 		}
 			
-		
+		/*
 		for(i = 0; i < this.invaders.length; i++) {
 			if(this.invaders[i].y > 500) {
 				this.lives--;
@@ -182,7 +177,7 @@ var Game = {
 				return;
 			}
 		}	
-		
+		*/
 		for(i = 0; i < this.invaderBullets.length; i++) {
 			if(intersect(this.player, this.invaderBullets[i])) {
 				this.invaderBullets[i].dead = true;
@@ -194,7 +189,7 @@ var Game = {
 
 		this.player.draw(deltaTime);
 		this.bullet.draw(deltaTime);
-        this.invaders.forEach(function (o) { o.draw(deltaTime); });
+		InvadersGroup.draw(deltaTime);
 		this.invaderBullets.forEach(function (o) { o.draw(deltaTime); });
 		this.bunkers.forEach(function (o) { o.draw(deltaTime); });
 		this.bonusShip.draw(deltaTime);
