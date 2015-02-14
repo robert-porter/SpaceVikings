@@ -1,16 +1,4 @@
 ﻿
-Invader.prototype = Object.create(GameObject.prototype);
-Invader.prototype.constructor = Invader;
-
-function Invader(x, y) {
-	GameObject.call(this);
-	this.x = x;
-	this.y = y;
-	this.width = 32;
-	this.height = 32;
-	this.velX = 0;
-	this.velY = 0;
-}
 
 function AudioBank(file, count) {
 	this.bank = [];
@@ -70,6 +58,9 @@ var InvadersGroup = {
 		
 		this.posX = 0;
 		this.posY = 0;
+		
+		this.sprite = new Image();
+		this.sprite.src = "test.png";
 	},
 	createInvaders: function(){
 		this.invaders = [];
@@ -223,13 +214,11 @@ var InvadersGroup = {
 
 					var invaderX = this.posX + x * this.CELL_WIDTH + (this.INVADER_WIDTH - this.CELL_WIDTH) / 2;
 					var invaderY = this.posY + y * this.CELL_HEIGHT + (this.INVADER_HEIGHT - this.CELL_HEIGHT) / 2;
-
-					View.ctx.fillStyle = "#FF0000";
-					View.ctx.fillRect(invaderX, invaderY, this.INVADER_WIDTH, this.INVADER_HEIGHT);
+					
+					View.ctx.drawImage(this.sprite, invaderX, invaderY, this.INVADER_WIDTH, this.INVADER_HEIGHT);
 				}
 			}
 		}
 	}
 };
 
-Invader.prototype.update = function (deltaTime) { }
