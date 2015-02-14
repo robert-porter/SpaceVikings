@@ -61,6 +61,15 @@ var InvadersGroup = {
 		this.moveStart = Date.now();
 		this.numMoves = 0;
 		this.dir = 0;
+		
+		for(var y = 0; y < this.NUM_ROWS; y++) {
+			for (var x = 0; x < this.NUM_COLS; x++) {
+				this.invaders[x + y * this.NUM_COLS] = true;
+			}
+		}
+		
+		this.posX = 0;
+		this.posY = 0;
 	},
 	createInvaders: function(){
 		this.invaders = [];
@@ -107,13 +116,10 @@ var InvadersGroup = {
 			for(var y = this.NUM_ROWS-1; y >= 0; y--) {
 				var index = x + y * this.NUM_COLS;
 				if(this.invaders[index]) {
-					continue;
-				}
-				else {
 					if(Math.random() < 0.05) {
 						
 						var bulletX = this.posX + x * this.CELL_WIDTH + (this.INVADER_WIDTH - this.CELL_WIDTH) / 2 + this.INVADER_WIDTH / 2;
-						var bulletY = this.posY + x * this.CELL_HEIGHT + (this.INVADER_HEIGHT - this.CELL_HEIGHT) / 2 + this.INVADER_HEIGHT / 2;
+						var bulletY = this.posY + y * this.CELL_HEIGHT + (this.INVADER_HEIGHT - this.CELL_HEIGHT) / 2 + this.INVADER_HEIGHT / 2;
 						var invaderBullet = new InvaderBullet(bulletX, bulletY);
 						Game.invaderBullets.push(invaderBullet);
 					}
@@ -144,6 +150,25 @@ var InvadersGroup = {
 		}
 		return -1;
 	},
+	getBottomBoundaryYIndex: function() {
+		for(var y = this.NUM_ROWS-1; y >= 0; y--) {
+			for (var x = 0; x < this.NUM_COLS; x++) {
+				var index = x + y * this.NUM_COLS;
+				if(this.invaders[index]) {
+					return y;
+				}
+			}
+		}
+		return -1;
+	},
+	allDead: function() {
+		for(var i = 0; i < this.invaders.length; i++) {
+			if(this.invaders[i]) {
+				return false;
+			}
+		}
+		return true;
+	},
 	move: function(deltaTime) {
 		this.currentAudio = (this.currentAudio + 1) % this.audio.length;
 		this.audio[this.currentAudio].play();
@@ -168,12 +193,12 @@ var InvadersGroup = {
 		else if (this.dir == this.DOWN_TO_LEFT)  {
 			this.posY += this.VERTICAL_MOVEMENT; 
 			this.dir = this.LEFT;
-			this.moveInterval = this.moveInterval * 0.7;
+			this.moveInterval = this.moveInterval * 0.85;
 		}							
 		else if(this.dir == this.DOWN_TO_RIGHT) {
 			this.posY += this.VERTICAL_MOVEMENT;
 			this.dir = this.RIGHT;
-			this.moveInterval = this.moveInterval * 0.7;
+			this.moveInterval = this.moveInterval * 0.85;
 		}
 		
 		this.tryShoot();
@@ -205,7 +230,6 @@ var InvadersGroup = {
 			}
 		}
 	}
-	
 };
 
 Invader.prototype.update = function (deltaTime) { }
