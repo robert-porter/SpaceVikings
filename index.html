@@ -1,23 +1,32 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Simple Canvas Game</title>
-    <link rel="stylesheet" type="text/css" href="app.css">
-</head>
-<body>
+    <head>
+        <meta charset="utf-8">
+        <title>Simple Canvas Game</title>
+        <!--<link rel="stylesheet" type="text/css" href="app.css">-->
+        <link href="app.css" rel="stylesheet" type="text/css">
+        <link href='http://fonts.googleapis.com/css?family=Merriweather:400,900,700' rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+        <div id="overlay">
+            <div id="menu">
+                <a id="play">Play</a><br><br><br><br>
+                <a id="options">Options</a><br><br><br><br>
+                <a id="credits">Credits</a><br><br><br><br>
+                <a id="exit">Exit</a><br><br><br><br>
+            </div>
+        </div>
+        <script src="js/game_object.js"></script>
+        <script src="js/bullet.js"></script>
+    	<script src="js/invader_bullet.js"></script>
+        <script src="js/invader.js"></script>
+        <script src="js/player.js"></script>
+        <script src="js/bunker.js"></script>
+    	<script src="js/bonus_ship.js"></script>
+    	<script src="js/spawner.js"></script>
+    	<script src="js/game.js"></script>
+        <script src="js/app.js"></script>
+    	
 
-    <script src="js/game_object.js"></script>
-    <script src="js/bullet.js"></script>
-	<script src="js/invader_bullet.js"></script>
-    <script src="js/invader.js"></script>
-    <script src="js/player.js"></script>
-    <script src="js/bunker.js"></script>
-	<script src="js/bonus_ship.js"></script>
-	<script src="js/spawner.js"></script>
-	<script src="js/game.js"></script>
-    <script src="js/app.js"></script>
-	
-
-</body>
+    </body>
 </html>

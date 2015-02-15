@@ -93,6 +93,8 @@ var Game = {
     },
 	startLevel: function() {
 
+        document.getElementById("overlay").style.display = "block";
+        
 		this.bunkers = [];
 		
         this.player = new Player(50, 500);                            

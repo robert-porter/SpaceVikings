@@ -14,7 +14,7 @@ function Player(x, y) {
 	this.bullet = null;
 
     this.sprite = new Image();
-    this.sprite.src = "images/Invader.png";
+    this.sprite.src = "images/Player.png";
 }
 
 Player.prototype.update = function (deltaTime) {
