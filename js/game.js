@@ -135,7 +135,9 @@ var Game = {
     },
 
     update: function (deltaTime) {
-        Spawner.update(deltaTime);
+        var i = 0;
+		
+		Spawner.update(deltaTime);
 		this.player.update(deltaTime);
 		this.bullet.update(deltaTime);
 		this.invaderBullets.forEach(function (o) { o.update(deltaTime); });
@@ -146,6 +148,20 @@ var Game = {
 
         // get rid of dead objects 
         this.invaderBullets = this.invaderBullets.filter(function (o) { return !o.dead; });
+		
+
+		if(InvadersGroup.posY + InvadersGroup.getBottomBoundaryYIndex() * InvadersGroup.CELL_HEIGHT + InvadersGroup.CELL_HEIGHT > 500) {
+			this.lives--;
+			this.startLevel();
+			return;
+		}	
+		
+		if(InvadersGroup.allDead()) {
+			this.lives++;
+			this.startLevel();
+			return;
+		}
+		
     },
 
     collisions: function () {
@@ -169,15 +185,7 @@ var Game = {
 			}
 		}
 			
-		/*
-		for(i = 0; i < this.invaders.length; i++) {
-			if(this.invaders[i].y > 500) {
-				this.lives--;
-				this.startLevel();
-				return;
-			}
-		}	
-		*/
+
 		for(i = 0; i < this.invaderBullets.length; i++) {
 			if(intersect(this.player, this.invaderBullets[i])) {
 				this.invaderBullets[i].dead = true;
