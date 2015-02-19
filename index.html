@@ -10,10 +10,15 @@
     <body style="margin:0px;">
         <div id="overlay">
             <div id="menu">
-                <a id="play">Play</a><br><br><br><br>
-                <a id="options">Options</a><br><br><br><br>
-                <a id="credits">Credits</a><br><br><br><br>
-                <a id="exit">Exit</a><br><br><br><br>
+                <a id="play" onclick="Menu.Play();">Play</a><br><br><br><br>
+                <a id="options" onclick="Menu.Options();">Options</a><br><br><br><br>
+                <a id="credits" onclick="Menu.Credits();">Credits</a><br><br><br><br>
+                <a id="exit" onclick="Menu.Exit();">Exit</a><br><br><br><br>
+            </div>
+        </div>
+        <div id="optionsoverlay">
+            <div id="optionsmenu">
+                
             </div>
         </div>
         <script src="js/game_object.js"></script>
@@ -26,7 +31,5 @@
     	<script src="js/spawner.js"></script>
     	<script src="js/game.js"></script>
         <script src="js/app.js"></script>
-    	
-
     </body>
 </html>
