@@ -1,17 +1,17 @@
-﻿
+﻿﻿
 
-function AudioBank(file, count) {
-	this.bank = [];
-	for(var i = 0; i < count; i++) {
-		this.bank[i] = new Audio(file);
-	}
-	this.last = 0;
-}
+// function AudioBank(file, count) {
+// 	this.bank = [];
+// 	for(var i = 0; i < count; i++) {
+// 		this.bank[i] = new Audio(file);
+// 	}
+// 	this.last = 0;
+// }
 
-AudioBank.prototype.play = function() {
-	this.last = (this.last + 1) % this.bank.length;
-	this.bank[this.last].play();
-}
+// AudioBank.prototype.play = function() {
+// 	this.last = (this.last + 1) % this.bank.length;
+// 	this.bank[this.last].play();
+// }
 
 var InvadersGroup = {
 
@@ -37,11 +37,11 @@ var InvadersGroup = {
 	posX: 40,
 	posY: 0,
 	
-	audio: [new AudioBank("audio/snd1.mp3", 4),
-			new AudioBank("audio/snd2.mp3", 4),
-			new AudioBank("audio/snd3.mp3", 4),
-			new AudioBank("audio/snd4.mp3", 4)	],
-	currentAudio: 0,
+	// audio: [new AudioBank("audio/snd1.mp3", 4),
+	// 		new AudioBank("audio/snd2.mp3", 4),
+	// 		new AudioBank("audio/snd3.mp3", 4),
+	// 		new AudioBank("audio/snd4.mp3", 4)	],
+	// currentAudio: 0,
 	invaders: [],
 
 	init: function() {
@@ -161,8 +161,8 @@ var InvadersGroup = {
 		return true;
 	},
 	move: function(deltaTime) {
-		this.currentAudio = (this.currentAudio + 1) % this.audio.length;
-		this.audio[this.currentAudio].play();
+		// this.currentAudio = (this.currentAudio + 1) % this.audio.length;
+		// this.audio[this.currentAudio].play();
 		
 		var leftIndex = this.getLeftBoundaryXIndex();
 		var rightIndex = this.getRightBoundaryXIndex();
@@ -221,4 +221,3 @@ var InvadersGroup = {
 		}
 	}
 };
-

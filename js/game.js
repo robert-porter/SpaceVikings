@@ -20,6 +20,7 @@ var Key = {
     LEFT: 37, // left arrow
     RIGHT: 39, // right arrow
     SHOOT: 32, // space
+    PAUSE: 80, //P
 
     isDown: function (keyCode) {
         return this.pressed[keyCode];
@@ -68,6 +69,7 @@ var View = {
 };
 
 var Game = {
+	isRunning: false,
     then: 0,
     player: null,
 	bullet: null,
@@ -87,12 +89,13 @@ var Game = {
         window.addEventListener('keydown', function (event) { Key.onKeydown(event); }, false);
 		
 		this.startLevel();
-		
-				
 
+        Menu.DisplayMenu();
     },
 	startLevel: function() {
-
+		
+		this.isRunning = true;
+        
 		this.bunkers = [];
 		
         this.player = new Player(50, 500);                            
@@ -119,8 +122,13 @@ var Game = {
         var now = Date.now();
         var delta = now - this.then;
 
-        this.update(delta / 1000);
-        this.render(delta / 1000);
+        if(this.isRunning)
+        {
+        	this.update(delta / 1000);
+        	this.render(delta / 1000);
+        }
+
+        Menu.update();
 
         this.then = now;
         var that = this;
@@ -207,4 +215,37 @@ var Game = {
 		View.drawLives(this.lives);
     }
 
+};
+
+var Menu = {
+
+	update: function(){
+		if(Key.isDown(Key.PAUSE)){
+			this.DisplayMenu();
+			document.getElementById("optionsoverlay").style.display = "none";
+		}
+	},
+
+	DisplayMenu: function(){
+		Game.isRunning = false;
+		document.getElementById("overlay").style.display = "block";
+	},
+
+	Play: function(){
+		Game.isRunning = true;
+		document.getElementById("overlay").style.display = "none";
+
+	},
+
+	Options: function(){
+		document.getElementById("optionsoverlay").style.display = "block";
+	},
+
+	Credits: function(){
+
+	},
+
+	Exit: function(){
+		window.close();
+	},
 };

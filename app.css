@@ -7,4 +7,109 @@
 }
 canvas {
     position:absolute;
+    z-index:1;
 }
+
+#menu{
+	width:200px;
+	text-align:center;
+	background-color:transparent;
+	border-radius:8px;
+	margin:auto;
+	padding:100px;
+}
+
+#overlay{
+	position:fixed;
+	top:10%;
+	left:-35.5%;
+	width:100%;
+	height:100%;
+	display:none;
+}
+#overlay{
+	z-index:2;
+}
+
+#play{
+	background-color:#5FAF64;
+	border:0px;
+	color:#fff;
+	font-weight:bolder;
+	font-family:"Merriweather", serif;
+	font-size:2em;
+	padding:20px;
+	border-radius:7px;
+}
+#play:hover{
+	background-color:#87D170;
+	cursor:pointer;
+}
+
+#options{
+	background-color:#5FAF64;
+	border:0px;
+	color:#fff;
+	font-weight:bolder;
+	font-family:"Merriweather", serif;
+	font-size:2em;
+	padding:20px;
+	border-radius:7px;
+}
+#options:hover{
+	background-color:#87D170;
+	cursor:pointer;
+}
+
+#credits{
+	background-color:#5FAF64;
+	border:0px;
+	color:#fff;
+	font-weight:bolder;
+	font-family:"Merriweather", serif;
+	font-size:2em;
+	padding:20px;
+	border-radius:7px;
+}
+#credits:hover{
+	background-color:#87D170;
+	cursor:pointer;
+}
+
+#exit{
+	background-color:#5FAF64;
+	border:0px;
+	color:#fff;
+	font-weight:bolder;
+	font-family:"Merriweather", serif;
+	font-size:2em;
+	padding:20px;
+	border-radius:7px;
+}
+#exit:hover{
+	background-color:#87D170;
+	cursor:pointer;
+}
+
+#optionsmenu{
+	width:200px;
+	height:400px;
+	text-align:center;
+	background-color:#fff;
+	border-radius:8px;
+	margin:auto;
+	padding:100px;
+}
+
+#optionsoverlay{
+	position:fixed;
+	top:10%;
+	left:-35.5%;
+	width:100%;
+	height:100%;
+	display:none;
+}
+#optionsoverlay{
+	z-index:3;
+}
+
