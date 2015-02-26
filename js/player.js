@@ -15,7 +15,7 @@ function Player(x, y) {
 	this.sprite.src = "images/Player.png";
 }
 
-Player.prototype.update = function (deltaTime) {
+Player.prototype.update = function(deltaTime) {
 	this.test = 50;
 	if (Key.isDown(Key.LEFT)) {
 		this.velX = -50;

@@ -1,10 +1,10 @@
 ﻿var Spawner = {
 
-	init: function () {
+	init: function() {
 		this.bonusShipInterval = 5000;
 		this.lastBonusShipTime = Date.now();
 	},
-	update: function (deltaTime) {
+	update: function(deltaTime) {
 		
 		var now = Date.now();
 		if (now - this.lastBonusShipTime > this.bonusShipInterval && Game.bonusShip.dead) {

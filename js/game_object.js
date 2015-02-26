@@ -10,7 +10,7 @@
 	this.sprite.src = "";
 }
 
-GameObject.prototype.draw = function (deltaTime) {
+GameObject.prototype.draw = function(deltaTime) {
 	if(this.dead)
 		return;
 
@@ -20,7 +20,7 @@ GameObject.prototype.draw = function (deltaTime) {
 	View.ctx.drawImage(this.sprite, this.x, this.y);
 }
 
-GameObject.prototype.update = function (deltaTime) {
+GameObject.prototype.update = function(deltaTime) {
 	this.x = this.x + this.velX * deltaTime;
 	this.y = this.y + this.velY * deltaTime;
 	

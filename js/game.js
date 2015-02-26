@@ -1,8 +1,9 @@
 ﻿var World = {
+	//If these change, make sure to update the CSS as well
 	WIDTH: 600,
 	HEIGHT: 600,
 
-	debug_drawBorder: function () {
+	debug_drawBorder: function() {
 		View.ctx.beginPath();
 		View.ctx.moveTo(0, 0);
 		View.ctx.lineTo(this.WIDTH, 0);
@@ -16,27 +17,27 @@
 var Key = {
 	pressed: {},
 
-	LEFT: 37, // left arrow
-	RIGHT: 39, // right arrow
-	SHOOT: 32, // space
+	LEFT: 37, //Left arrow
+	RIGHT: 39, //Right arrow
+	SHOOT: 32, //Space
 	PAUSE: 80, //P
 
-	isDown: function (keyCode) {
+	isDown: function(keyCode) {
 		return this.pressed[keyCode];
 	},
 
-	onKeydown: function (event) {
+	onKeydown: function(event) {
 		this.pressed[event.keyCode] = true;
 	},
 
-	onKeyup: function (event) {
+	onKeyup: function(event) {
 		this.pressed[event.keyCode] = false;
 	}
 };
 
 var View = {
 
-	init: function (w, h) {
+	init: function(w, h) {
 		this.canvas = document.createElement("canvas");
 		this.ctx = this.canvas.getContext("2d");
 		this.canvas.width = w;
@@ -45,7 +46,7 @@ var View = {
 
 	},
 
-	clear: function (color) {
+	clear: function(color) {
 
 		// Store the current transformation matrix
 		this.ctx.save();
@@ -78,14 +79,14 @@ var Game = {
 	points: 0,
 	lives: 0,
 
-	init: function () {
+	init: function() {
 		requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame ||
 			window.msRequestAnimationFrame || window.mozRequestAnimationFrame;
 
 		View.init(window.innerWidth, window.innerHeight);
 
-		window.addEventListener('keyup', function (event) { Key.onKeyup(event); }, false);
-		window.addEventListener('keydown', function (event) { Key.onKeydown(event); }, false);
+		window.addEventListener('keyup', function(event) { Key.onKeyup(event); }, false);
+		window.addEventListener('keydown', function(event) { Key.onKeydown(event); }, false);
 		
 		this.startLevel();
 
@@ -117,7 +118,7 @@ var Game = {
 		Spawner.init();
 	},
 
-	frame: function () {
+	frame: function() {
 		var now = Date.now();
 		var delta = now - this.then;
 
@@ -131,30 +132,30 @@ var Game = {
 
 		this.then = now;
 		var that = this;
-		requestAnimationFrame(function () { that.frame() });
+		requestAnimationFrame(function() { that.frame() });
 	},
-	addKeyListener: function (listener) {
+	addKeyListener: function(listener) {
 		window.addEventListener('keydown', listener, false);
 	},
-	run: function () {
+	run: function() {
 		this.then = Date.now();
 		this.frame();
 	},
 
-	update: function (deltaTime) {
+	update: function(deltaTime) {
 		var i = 0;
 		
 		Spawner.update(deltaTime);
 		this.player.update(deltaTime);
 		this.bullet.update(deltaTime);
-		this.invaderBullets.forEach(function (o) { o.update(deltaTime); });
+		this.invaderBullets.forEach(function(o) { o.update(deltaTime); });
 		this.bonusShip.update(deltaTime);
 		InvadersGroup.update(deltaTime);
 		
 		this.collisions();
 
 		// get rid of dead objects 
-		this.invaderBullets = this.invaderBullets.filter(function (o) { return !o.dead; });
+		this.invaderBullets = this.invaderBullets.filter(function(o) { return !o.dead; });
 		
 
 		if(InvadersGroup.posY + InvadersGroup.getBottomBoundaryYIndex() * InvadersGroup.CELL_HEIGHT + InvadersGroup.CELL_HEIGHT > 500) {
@@ -171,7 +172,7 @@ var Game = {
 		
 	},
 
-	collisions: function () {
+	collisions: function() {
 		
 		InvadersGroup.bulletCollision(this.bullet);
 		
@@ -199,14 +200,14 @@ var Game = {
 			}
 		}
 	},
-	render: function (deltaTime) {
+	render: function(deltaTime) {
 		View.clear();
 
 		this.player.draw(deltaTime);
 		this.bullet.draw(deltaTime);
 		InvadersGroup.draw(deltaTime);
-		this.invaderBullets.forEach(function (o) { o.draw(deltaTime); });
-		this.bunkers.forEach(function (o) { o.draw(deltaTime); });
+		this.invaderBullets.forEach(function(o) { o.draw(deltaTime); });
+		this.bunkers.forEach(function(o) { o.draw(deltaTime); });
 		this.bonusShip.draw(deltaTime);
 		
 		//World.debug_drawBorder();
