@@ -1,63 +1,63 @@
 ﻿
 var World = {
-    WIDTH: 600,
-    HEIGHT: 600,
+	WIDTH: 600,
+	HEIGHT: 600,
 
-    debug_drawBorder: function () {
-        View.ctx.beginPath();
-        View.ctx.moveTo(0, 0);
-        View.ctx.lineTo(this.WIDTH, 0);
-        View.ctx.lineTo(this.WIDTH, this.HEIGHT);
-        View.ctx.lineTo(0, this.HEIGHT);
-        View.ctx.lineTo(0, 0);
-        View.ctx.stroke();
-    }
+	debug_drawBorder: function () {
+		View.ctx.beginPath();
+		View.ctx.moveTo(0, 0);
+		View.ctx.lineTo(this.WIDTH, 0);
+		View.ctx.lineTo(this.WIDTH, this.HEIGHT);
+		View.ctx.lineTo(0, this.HEIGHT);
+		View.ctx.lineTo(0, 0);
+		View.ctx.stroke();
+	}
 };
 
 var Key = {
-    pressed: {},
+	pressed: {},
 
-    LEFT: 37, // left arrow
-    RIGHT: 39, // right arrow
-    SHOOT: 32, // space
-    PAUSE: 80, //P
+	LEFT: 37, // left arrow
+	RIGHT: 39, // right arrow
+	SHOOT: 32, // space
+	PAUSE: 80, //P
 
-    isDown: function (keyCode) {
-        return this.pressed[keyCode];
-    },
+	isDown: function (keyCode) {
+		return this.pressed[keyCode];
+	},
 
-    onKeydown: function (event) {
-        this.pressed[event.keyCode] = true;
-    },
+	onKeydown: function (event) {
+		this.pressed[event.keyCode] = true;
+	},
 
-    onKeyup: function (event) {
-        this.pressed[event.keyCode] = false;
-    }
+	onKeyup: function (event) {
+		this.pressed[event.keyCode] = false;
+	}
 };
 
 var View = {
 
-    init: function (w, h) {
-        this.canvas = document.createElement("canvas");
-        this.ctx = this.canvas.getContext("2d");
-        this.canvas.width = w;
-        this.canvas.height = h;
-        document.body.appendChild(this.canvas);
+	init: function (w, h) {
+		this.canvas = document.createElement("canvas");
+		this.ctx = this.canvas.getContext("2d");
+		this.canvas.width = w;
+		this.canvas.height = h;
+		document.body.appendChild(this.canvas);
 
-    },
+	},
 
-    clear: function (color) {
+	clear: function (color) {
 
-        // Store the current transformation matrix
-        this.ctx.save();
+		// Store the current transformation matrix
+		this.ctx.save();
 
-        // Use the identity matrix while clearing the canvas
-        this.ctx.setTransform(1, 0, 0, 1, 0, 0);
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		// Use the identity matrix while clearing the canvas
+		this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // Restore the transform
-        this.ctx.restore();
-    }, 
+		// Restore the transform
+		this.ctx.restore();
+	}, 
 	drawPoints: function(points) {
 		this.ctx.font="20px Andale Mono";
 		this.ctx.fillText("POINTS: " + points, 10, 50);
@@ -70,8 +70,8 @@ var View = {
 
 var Game = {
 	isRunning: false,
-    then: 0,
-    player: null,
+	then: 0,
+	player: null,
 	bullet: null,
 	invaderBullets: [],
 	bunkers: [],
@@ -79,26 +79,26 @@ var Game = {
 	points: 0,
 	lives: 0,
 
-    init: function () {
-        requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame ||
-            window.msRequestAnimationFrame || window.mozRequestAnimationFrame;
+	init: function () {
+		requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame ||
+			window.msRequestAnimationFrame || window.mozRequestAnimationFrame;
 
-        View.init(window.innerWidth, window.innerHeight);
+		View.init(window.innerWidth, window.innerHeight);
 
-        window.addEventListener('keyup', function (event) { Key.onKeyup(event); }, false);
-        window.addEventListener('keydown', function (event) { Key.onKeydown(event); }, false);
+		window.addEventListener('keyup', function (event) { Key.onKeyup(event); }, false);
+		window.addEventListener('keydown', function (event) { Key.onKeydown(event); }, false);
 		
 		this.startLevel();
 
-        Menu.DisplayMenu();
-    },
+		Menu.DisplayMenu();
+	},
 	startLevel: function() {
 		
 		this.isRunning = true;
-        
+		
 		this.bunkers = [];
 		
-        this.player = new Player(50, 500);                            
+		this.player = new Player(50, 500);							
 		this.bullet = new Bullet();
 		this.player.bullet = this.bullet;
 		this.bullet.dead = true;
@@ -118,32 +118,32 @@ var Game = {
 		Spawner.init();
 	},
 
-    frame: function () {
-        var now = Date.now();
-        var delta = now - this.then;
+	frame: function () {
+		var now = Date.now();
+		var delta = now - this.then;
 
-        if(this.isRunning)
-        {
-        	this.update(delta / 1000);
-        	this.render(delta / 1000);
-        }
+		if(this.isRunning)
+		{
+			this.update(delta / 1000);
+			this.render(delta / 1000);
+		}
 
-        Menu.update();
+		Menu.update();
 
-        this.then = now;
-        var that = this;
-        requestAnimationFrame(function () { that.frame() });
-    },
-    addKeyListener: function (listener) {
-        window.addEventListener('keydown', listener, false);
-    },
-    run: function () {
-        this.then = Date.now();
-        this.frame();
-    },
+		this.then = now;
+		var that = this;
+		requestAnimationFrame(function () { that.frame() });
+	},
+	addKeyListener: function (listener) {
+		window.addEventListener('keydown', listener, false);
+	},
+	run: function () {
+		this.then = Date.now();
+		this.frame();
+	},
 
-    update: function (deltaTime) {
-        var i = 0;
+	update: function (deltaTime) {
+		var i = 0;
 		
 		Spawner.update(deltaTime);
 		this.player.update(deltaTime);
@@ -152,10 +152,10 @@ var Game = {
 		this.bonusShip.update(deltaTime);
 		InvadersGroup.update(deltaTime);
 		
-        this.collisions();
+		this.collisions();
 
-        // get rid of dead objects 
-        this.invaderBullets = this.invaderBullets.filter(function (o) { return !o.dead; });
+		// get rid of dead objects 
+		this.invaderBullets = this.invaderBullets.filter(function (o) { return !o.dead; });
 		
 
 		if(InvadersGroup.posY + InvadersGroup.getBottomBoundaryYIndex() * InvadersGroup.CELL_HEIGHT + InvadersGroup.CELL_HEIGHT > 500) {
@@ -170,9 +170,9 @@ var Game = {
 			return;
 		}
 		
-    },
+	},
 
-    collisions: function () {
+	collisions: function () {
 		
 		InvadersGroup.bulletCollision(this.bullet);
 		
@@ -199,9 +199,9 @@ var Game = {
 				this.invaderBullets[i].dead = true;
 			}
 		}
-    },
-    render: function (deltaTime) {
-        View.clear();
+	},
+	render: function (deltaTime) {
+		View.clear();
 
 		this.player.draw(deltaTime);
 		this.bullet.draw(deltaTime);
@@ -210,10 +210,10 @@ var Game = {
 		this.bunkers.forEach(function (o) { o.draw(deltaTime); });
 		this.bonusShip.draw(deltaTime);
 		
-        World.debug_drawBorder();
+		World.debug_drawBorder();
 		View.drawPoints(this.points);
 		View.drawLives(this.lives);
-    }
+	}
 
 };
 

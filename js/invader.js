@@ -16,9 +16,9 @@
 var InvadersGroup = {
 
 	LEFT: 0,
-    RIGHT: 1,
-    DOWN_TO_LEFT: 2,
-    DOWN_TO_RIGHT: 3,
+	RIGHT: 1,
+	DOWN_TO_LEFT: 2,
+	DOWN_TO_RIGHT: 3,
 	
 	NUM_ROWS: 5,
 	NUM_COLS: 11,
