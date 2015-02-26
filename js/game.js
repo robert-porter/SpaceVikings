@@ -242,9 +242,5 @@ var Menu = {
 
 	Credits: function(){
 
-	},
-
-	Exit: function(){
-		window.close();
-	},
+	}
 };
