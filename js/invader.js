@@ -60,7 +60,7 @@ var InvadersGroup = {
 		this.posY = 0;
 		
 		this.sprite = new Image();
-		this.sprite.src = "test.png";
+		this.sprite.src = "images/test.png";
 	},
 	createInvaders: function(){
 		this.invaders = [];
