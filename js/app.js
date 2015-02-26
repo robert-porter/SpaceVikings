@@ -1,3 +1,2 @@
-﻿
-Game.init();
+﻿Game.init();
 Game.run();

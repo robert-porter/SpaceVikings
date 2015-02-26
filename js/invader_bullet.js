@@ -1,4 +1,3 @@
-
 InvaderBullet.prototype = Object.create(Bullet.prototype);
 InvaderBullet.prototype.constructor = InvaderBullet;
 

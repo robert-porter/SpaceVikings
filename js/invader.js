@@ -1,6 +1,4 @@
-﻿﻿
-
-// function AudioBank(file, count) {
+﻿// function AudioBank(file, count) {
 // 	this.bank = [];
 // 	for(var i = 0; i < count; i++) {
 // 		this.bank[i] = new Audio(file);

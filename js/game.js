@@ -1,5 +1,4 @@
-﻿
-var World = {
+﻿var World = {
 	WIDTH: 600,
 	HEIGHT: 600,
 
@@ -64,7 +63,7 @@ var View = {
 	}, 
 	drawLives: function(lives) {
 		this.ctx.font = "20px Andale Mono";
-		this.ctx.fillText("LIVES: " + lives, 500, 50);	
+		this.ctx.fillText("LIVES: " + lives, 500, 50);
 	}
 };
 
@@ -98,7 +97,7 @@ var Game = {
 		
 		this.bunkers = [];
 		
-		this.player = new Player(50, 500);							
+		this.player = new Player(50, 500);
 		this.bullet = new Bullet();
 		this.player.bullet = this.bullet;
 		this.bullet.dead = true;
@@ -222,7 +221,7 @@ var Menu = {
 	update: function(){
 		if(Key.isDown(Key.PAUSE)){
 			this.DisplayMenu();
-			document.getElementById("optionsoverlay").style.display = "none";
+			document.getElementById("options").style.display = "none";
 		}
 	},
 
@@ -238,7 +237,7 @@ var Menu = {
 	},
 
 	Options: function(){
-		document.getElementById("optionsoverlay").style.display = "block";
+		document.getElementById("options").style.display = "block";
 	},
 
 	Credits: function(){

@@ -1,7 +1,5 @@
-
 Bunker.prototype = Object.create(GameObject.prototype);
 Bunker.prototype.constructor = Bunker;
-
 
 function Bunker(x, y, w, h) {
 	GameObject.call(this, x, y, w, h);
@@ -22,8 +20,7 @@ function Bunker(x, y, w, h) {
 	this.cellHeight = this.height / 4;
 }
 
-Bunker.prototype.draw = function(deltaTime)
-{
+Bunker.prototype.draw = function(deltaTime) {
 	for(var x = 0; x < 4; x++) {
 		for(var y = 0; y < 4; y++) {
 			if(this.parts[x + y * 4] > 0) {

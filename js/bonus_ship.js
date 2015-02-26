@@ -1,4 +1,3 @@
-
 BonusShip.prototype = Object.create(GameObject.prototype);
 BonusShip.prototype.constructor = BonusShip;
 
@@ -7,5 +6,3 @@ function BonusShip(x, y) {
 	this.velX = -35;
 	this.velY = 0;
 }
-
-

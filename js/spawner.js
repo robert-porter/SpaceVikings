@@ -1,6 +1,4 @@
-﻿
-
-var Spawner = {
+﻿var Spawner = {
 
 	init: function () {
 		this.bonusShipInterval = 5000;

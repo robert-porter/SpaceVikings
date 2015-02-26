@@ -1,6 +1,4 @@
-﻿
-
-Player.prototype = Object.create(GameObject.prototype);
+﻿Player.prototype = Object.create(GameObject.prototype);
 Player.prototype.constructor = Player;
 
 function Player(x, y) {
