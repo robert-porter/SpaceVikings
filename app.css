@@ -10,20 +10,20 @@ canvas {
 	z-index: 1;
 }
 
-#menu {
-	width: 600px;
-	height: 600px;
-	border: 2px solid #888;
-	text-align: center;
-	background-color: transparent;
-}
-
-#overlay {
+#game-wrapper {
 	position: absolute;
 	top: 0px;
 	left: 0px;
 	right: 0px;
 	bottom: 0px;
+	width: 600px;
+	height: 600px;
+	border: 2px solid #888;
+	background-color: transparent;
+}
+
+#menu {
+	text-align: center;
 	z-index: 2;
 }
 

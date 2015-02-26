@@ -42,7 +42,7 @@ var View = {
 		this.ctx = this.canvas.getContext("2d");
 		this.canvas.width = w;
 		this.canvas.height = h;
-		document.body.appendChild(this.canvas);
+		document.getElementById("game-wrapper").appendChild(this.canvas);
 
 	},
 
@@ -210,7 +210,7 @@ var Game = {
 		this.bunkers.forEach(function (o) { o.draw(deltaTime); });
 		this.bonusShip.draw(deltaTime);
 		
-		World.debug_drawBorder();
+		//World.debug_drawBorder();
 		View.drawPoints(this.points);
 		View.drawLives(this.lives);
 	}
@@ -228,12 +228,12 @@ var Menu = {
 
 	DisplayMenu: function(){
 		Game.isRunning = false;
-		document.getElementById("overlay").style.display = "block";
+		document.getElementById("menu").style.display = "block";
 	},
 
 	Play: function(){
 		Game.isRunning = true;
-		document.getElementById("overlay").style.display = "none";
+		document.getElementById("menu").style.display = "none";
 
 	},
 
