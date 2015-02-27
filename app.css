@@ -10,25 +10,45 @@ canvas {
 	z-index: 1;
 }
 
+.fade {
+    -webkit-transition: opacity .15s ease-in-out;
+    -moz-transition: opacity .15s ease-in-out;
+    -ms-transition: opacity .15s ease-in-out;
+    -o-transition: opacity .15s ease-in-out;
+}
+
 #game-wrapper {
 	position: absolute;
 	top: 0px;
 	left: 0px;
-	right: 0px;
-	bottom: 0px;
 	width: 600px;
 	height: 600px;
-	border: 2px solid #888;
-	background-color: transparent;
-}
-
-#menu {
-	text-align: center;
+	border: 1px solid #444;
+	background-image: url(images/Background.png);
+	background-position: -50px 0px;
 	z-index: 2;
 }
 
+#menu {
+	background-color: rgba(50, 50, 0, 0.2);
+	height: 100%;
+	text-align: center;
+	opacity: 1;
+	z-index: 3;
+}
+#menu.fade {
+	opacity: 0;
+}
+
 #play {
-	margin-top: 100px;
+	margin-top: 140px;
+}
+
+#game-canvas {
+	opacity: 0;
+}
+#game-canvas.fade {
+	opacity: 1;
 }
 
 .menu-button {

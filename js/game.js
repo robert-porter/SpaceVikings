@@ -42,6 +42,7 @@ var View = {
 		this.ctx = this.canvas.getContext("2d");
 		this.canvas.width = w;
 		this.canvas.height = h;
+		this.canvas.id = "game-canvas";
 		document.getElementById("game-wrapper").appendChild(this.canvas);
 
 	},
@@ -57,13 +58,22 @@ var View = {
 
 		// Restore the transform
 		this.ctx.restore();
-	}, 
+	},
+	drawInfo: function(points, lives) {
+		this.ctx.fillStyle = "#dfe";
+		this.ctx.font = "bold 20px Andale Mono";
+		this.ctx.shadowColor = "#000";
+		this.ctx.shadowOffsetX = 0;
+		this.ctx.shadowOffsetY = 0;
+		this.ctx.shadowBlur = 2;
+		
+		View.drawPoints(points);
+		View.drawLives(lives);
+	},
 	drawPoints: function(points) {
-		this.ctx.font="20px Andale Mono";
 		this.ctx.fillText("POINTS: " + points, 10, 50);
 	}, 
 	drawLives: function(lives) {
-		this.ctx.font = "20px Andale Mono";
 		this.ctx.fillText("LIVES: " + lives, 500, 50);
 	}
 };
@@ -122,8 +132,7 @@ var Game = {
 		var now = Date.now();
 		var delta = now - this.then;
 
-		if(this.isRunning)
-		{
+		if(this.isRunning) {
 			this.update(delta / 1000);
 			this.render(delta / 1000);
 		}
@@ -211,8 +220,7 @@ var Game = {
 		this.bonusShip.draw(deltaTime);
 		
 		//World.debug_drawBorder();
-		View.drawPoints(this.points);
-		View.drawLives(this.lives);
+		View.drawInfo(this.points, this.lives);
 	}
 
 };
@@ -232,9 +240,12 @@ var Menu = {
 	},
 
 	Play: function(){
-		Game.isRunning = true;
-		document.getElementById("menu").style.display = "none";
-
+		document.getElementById("menu").className = "fade";
+		setTimeout(function() {
+			document.getElementById("menu").style.display = "none";
+			document.getElementById("game-canvas").className = "fade";
+			Game.isRunning = true;
+		}, 150);
 	},
 
 	Options: function(){
