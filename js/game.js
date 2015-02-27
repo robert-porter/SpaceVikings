@@ -251,7 +251,7 @@ var Menu = {
 	},
 
 	Options: function() {
-		document.getElementById("options").style.display = "block";
+		document.getElementById("options-menu").style.display = "block";
 
 		return false;
 	},

@@ -17,6 +17,23 @@ canvas {
     -o-transition: opacity .15s ease-in-out;
 }
 
+.menu-button {
+	display: inline-block;
+	margin-bottom: 20px;
+	background-color: #5FAF64;
+	color: #fff;
+	font-weight: bold;
+	font-family: "Merriweather", serif;
+	font-size: 2em;
+	padding: 20px;
+	border-radius: 7px;
+	cursor: pointer;
+	text-decoration: none;
+}
+.menu-button:hover {
+	background-color: #87D170;
+}
+
 #game-wrapper {
 	position: absolute;
 	top: 0px;
@@ -51,19 +68,21 @@ canvas {
 	opacity: 1;
 }
 
-.menu-button {
-	display: inline-block;
-	margin-bottom: 20px;
+#options-menu {
+	position: absolute;
+	top: 240px;
+	left: 0px;
+	z-index: 4;
+	display: none;
+	width: 598px;
+	height: 60px;
+	text-align: center;
 	background-color: #5FAF64;
 	color: #fff;
 	font-weight: bold;
 	font-family: "Merriweather", serif;
-	font-size: 2em;
-	padding: 20px;
 	border-radius: 7px;
-	cursor: pointer;
-	text-decoration: none;
-}
-.menu-button:hover {
-	background-color: #87D170;
+	font-size: 2em;
+	border: 1px solid #050;
+	padding-top: 20px;
 }
