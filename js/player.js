@@ -10,20 +10,19 @@ function Player(x, y) {
 	this.velX = 0;
 	this.velY = 0;
 	this.bullet = null;
+	this.speed = 50;
+	this.bounds = 50;
 
 	this.sprite = new Image();
 	this.sprite.src = "images/Player.png";
 }
 
 Player.prototype.update = function(deltaTime) {
-	this.test = 50;
-	if (Key.isDown(Key.LEFT)) {
-		this.velX = -50;
-	}
-	else if (Key.isDown(Key.RIGHT)) {
-		this.velX = 50;
-	}
-	else {
+	if(Key.isDown(Key.LEFT) && this.x > this.bounds) {
+		this.velX = -this.speed;
+	} else if(Key.isDown(Key.RIGHT) && this.x < (600 - this.width - this.bounds)) {
+		this.velX = this.speed;
+	} else {
 		this.velX = 0;
 	}
 
