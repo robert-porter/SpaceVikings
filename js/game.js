@@ -66,7 +66,7 @@ var View = {
 		this.ctx.shadowOffsetX = 0;
 		this.ctx.shadowOffsetY = 0;
 		this.ctx.shadowBlur = 2;
-		
+
 		View.drawPoints(points);
 		View.drawLives(lives);
 	},
@@ -234,25 +234,29 @@ var Menu = {
 		}
 	},
 
-	DisplayMenu: function(){
+	DisplayMenu: function() {
 		Game.isRunning = false;
 		document.getElementById("menu").style.display = "block";
 	},
 
-	Play: function(){
+	Play: function() {
 		document.getElementById("menu").className = "fade";
 		setTimeout(function() {
 			document.getElementById("menu").style.display = "none";
 			document.getElementById("game-canvas").className = "fade";
 			Game.isRunning = true;
 		}, 150);
+
+		return false;
 	},
 
-	Options: function(){
+	Options: function() {
 		document.getElementById("options").style.display = "block";
+
+		return false;
 	},
 
-	Credits: function(){
-
+	Credits: function() {
+		return false;
 	}
 };
