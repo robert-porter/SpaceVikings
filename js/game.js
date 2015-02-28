@@ -2,6 +2,7 @@
 	//If these change, make sure to update the CSS as well
 	WIDTH: 600,
 	HEIGHT: 600,
+	PARALLAX_AMOUNT: 30,
 
 	debug_drawBorder: function() {
 		View.ctx.beginPath();
@@ -39,11 +40,10 @@ var View = {
 		this.canvas.width = w;
 		this.canvas.height = h;
 		this.canvas.id = "game-canvas";
-		document.getElementById("game-wrapper").appendChild(this.canvas);
 
+		document.getElementById("game-wrapper").appendChild(this.canvas);
 	},
 	clear: function(color) {
-
 		// Store the current transformation matrix
 		this.ctx.save();
 
@@ -70,6 +70,13 @@ var View = {
 	}, 
 	drawLives: function(lives) {
 		this.ctx.fillText("LIVES: " + lives, 500, 50);
+	},
+	adjustParallax: function() {
+		var relx = Game.player.x - World.CENTER,
+			offset = -(relx / ((World.CENTER - Game.player.bounds) / World.PARALLAX_AMOUNT));
+
+		offset -= World.PARALLAX_AMOUNT;
+		document.getElementById("game-wrapper").style.backgroundPosition = offset + "px 0px";
 	}
 };
 
@@ -98,15 +105,18 @@ var Game = {
 		Menu.DisplayMenu();
 	},
 	startLevel: function() {
-		
 		this.isRunning = true;
 		
 		this.bunkers = [];
 		
-		this.player = new Player(50, 500);
+		this.player = new Player(0, 500);
 		this.bullet = new Bullet();
 		this.player.bullet = this.bullet;
 		this.bullet.dead = true;
+
+		//Center the player
+		World.CENTER = (World.WIDTH / 2) - (this.player.width / 2);
+		this.player.x = World.CENTER;
 				
 		var bunker = null;
 		for(var x = 0; x < 4; x++) {
@@ -211,6 +221,7 @@ var Game = {
 		
 		//World.debug_drawBorder();
 		View.drawInfo(this.points, this.lives);
+		View.adjustParallax();
 	}
 
 };
