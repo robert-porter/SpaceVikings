@@ -1,15 +1,17 @@
-﻿function AudioBank(file, count) {
+﻿function AudioBank(files) {
 	this.bank = [];
-	for(var i = 0; i < count; i++) {
-		this.bank[i] = new Audio(file);
+
+	for(var i = 0; i < files.length; i++) {
+		this.bank[i] = new Audio(files[i]);
 	}
-	this.last = 0;
+	
+	this.last = -1;
 }
 
-AudioBank.prototype.play = function() {
+AudioBank.prototype.playNext = function() {
 	this.last = (this.last + 1) % this.bank.length;
 	this.bank[this.last].play();
-}
+};
 
 var InvadersGroup = {
 	LEFT: 0,
@@ -34,13 +36,12 @@ var InvadersGroup = {
 	posX: 40,
 	posY: 0,
 	
-	audio: [
-		new AudioBank("audio/move_1.mp3", 4),
-		new AudioBank("audio/move_2.mp3", 4),
-		new AudioBank("audio/move_3.mp3", 4),
-		new AudioBank("audio/move_4.mp3", 4)
-	],
-	currentAudio: -1,
+	audio: new AudioBank([
+		"audio/move_1.mp3",
+		"audio/move_2.mp3",
+		"audio/move_3.mp3",
+		"audio/move_4.mp3"
+	]),
 	invaders: [],
 
 	init: function() {
@@ -167,8 +168,7 @@ var InvadersGroup = {
 		return true;
 	},
 	move: function(deltaTime) {
-		this.currentAudio = (this.currentAudio + 1) % this.audio.length;
-		this.audio[this.currentAudio].play();
+		this.audio.playNext();
 		
 		var leftIndex = this.getLeftBoundaryXIndex();
 		var rightIndex = this.getRightBoundaryXIndex();
