@@ -36,4 +36,4 @@ Player.prototype.update = function(deltaTime) {
 
 	this.x = this.x + this.velX * deltaTime;
 	this.y = this.y + this.velY * deltaTime;
-}
+};

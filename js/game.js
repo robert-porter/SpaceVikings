@@ -16,7 +16,6 @@
 
 var Key = {
 	pressed: {},
-
 	LEFT: 37, //Left arrow
 	RIGHT: 39, //Right arrow
 	SHOOT: 32, //Space
@@ -25,18 +24,15 @@ var Key = {
 	isDown: function(keyCode) {
 		return this.pressed[keyCode];
 	},
-
 	onKeydown: function(event) {
 		this.pressed[event.keyCode] = true;
 	},
-
 	onKeyup: function(event) {
 		this.pressed[event.keyCode] = false;
 	}
 };
 
 var View = {
-
 	init: function(w, h) {
 		this.canvas = document.createElement("canvas");
 		this.ctx = this.canvas.getContext("2d");
@@ -46,7 +42,6 @@ var View = {
 		document.getElementById("game-wrapper").appendChild(this.canvas);
 
 	},
-
 	clear: function(color) {
 
 		// Store the current transformation matrix
@@ -95,8 +90,8 @@ var Game = {
 
 		View.init(window.innerWidth, window.innerHeight);
 
-		window.addEventListener('keyup', function(event) { Key.onKeyup(event); }, false);
-		window.addEventListener('keydown', function(event) { Key.onKeydown(event); }, false);
+		window.addEventListener("keyup", function(event) { Key.onKeyup(event); }, false);
+		window.addEventListener("keydown", function(event) { Key.onKeydown(event); }, false);
 		
 		this.startLevel();
 
@@ -127,7 +122,6 @@ var Game = {
 		
 		Spawner.init();
 	},
-
 	frame: function() {
 		var now = Date.now();
 		var delta = now - this.then;
@@ -144,13 +138,12 @@ var Game = {
 		requestAnimationFrame(function() { that.frame() });
 	},
 	addKeyListener: function(listener) {
-		window.addEventListener('keydown', listener, false);
+		window.addEventListener("keydown", listener, false);
 	},
 	run: function() {
 		this.then = Date.now();
 		this.frame();
 	},
-
 	update: function(deltaTime) {
 		var i = 0;
 		
@@ -178,11 +171,8 @@ var Game = {
 			this.startLevel();
 			return;
 		}
-		
 	},
-
 	collisions: function() {
-		
 		InvadersGroup.bulletCollision(this.bullet);
 		
 		for(i = 0; i < this.bunkers.length; i++) {
@@ -226,19 +216,16 @@ var Game = {
 };
 
 var Menu = {
-
 	update: function(){
 		if(Key.isDown(Key.PAUSE)){
 			this.DisplayMenu();
 			document.getElementById("options").style.display = "none";
 		}
 	},
-
 	DisplayMenu: function() {
 		Game.isRunning = false;
 		document.getElementById("menu").style.display = "block";
 	},
-
 	Play: function() {
 		document.getElementById("menu").className = "fade";
 		setTimeout(function() {
@@ -249,13 +236,11 @@ var Menu = {
 
 		return false;
 	},
-
 	Options: function() {
 		document.getElementById("options-menu").style.display = "block";
 
 		return false;
 	},
-
 	Credits: function() {
 		return false;
 	}

@@ -12,7 +12,6 @@
 // }
 
 var InvadersGroup = {
-
 	LEFT: 0,
 	RIGHT: 1,
 	DOWN_TO_LEFT: 2,
@@ -28,7 +27,7 @@ var InvadersGroup = {
 	HORIZONTAL_MOVEMENT: 20, // should be a multiple the of size of an invader cell 
 	VERTICAL_MOVEMENT: 20, // does not need to be a multiple the of size of an invader cell 
 	
-	dir:0,
+	dir: 0,
 	moveInterval: 1000,
 	moveStart: Date.now(),
 	numMoves: 0,
@@ -70,9 +69,9 @@ var InvadersGroup = {
 		}
 	},
 	bulletCollision: function(bullet) {
-		
-		if(bullet.dead)
+		if(bullet.dead) {
 			return;
+		}
 		
 		for(var y = 0; y < this.NUM_ROWS; y++) {
 			for (var x = 0; x < this.NUM_COLS; x++) {
@@ -82,7 +81,7 @@ var InvadersGroup = {
 					var invaderY = this.posY + y * this.CELL_HEIGHT + (this.INVADER_HEIGHT - this.CELL_HEIGHT) / 2;
 					var gameObject = new GameObject(invaderX, invaderY, this.INVADER_WIDTH, this.INVADER_HEIGHT);
 					
-					if (intersect(gameObject, bullet)) {
+					if(intersect(gameObject, bullet)) {
 						this.invaders[x + y * this.NUM_COLS] = false;
 						bullet.dead = true;
 						Game.points += 20;
@@ -97,6 +96,7 @@ var InvadersGroup = {
 			if(!this.invaders[col + y * this.NUM_COLS])
 				return true;
 		}
+
 		return false;
 	},
 	tryShoot: function(deltaTime) {
@@ -104,6 +104,7 @@ var InvadersGroup = {
 		for (var x = 0; x < this.NUM_COLS; x++) {
 			for(var y = this.NUM_ROWS-1; y >= 0; y--) {
 				var index = x + y * this.NUM_COLS;
+
 				if(this.invaders[index]) {
 					if(Math.random() < 0.05) {
 						
@@ -112,6 +113,7 @@ var InvadersGroup = {
 						var invaderBullet = new InvaderBullet(bulletX, bulletY);
 						Game.invaderBullets.push(invaderBullet);
 					}
+
 					break;
 				}
 			}
@@ -126,6 +128,7 @@ var InvadersGroup = {
 				}
 			}
 		}
+
 		return -1;
 	},
 	getRightBoundaryXIndex: function() {
@@ -137,6 +140,7 @@ var InvadersGroup = {
 				}
 			}
 		}
+
 		return -1;
 	},
 	getBottomBoundaryYIndex: function() {
@@ -148,6 +152,7 @@ var InvadersGroup = {
 				}
 			}
 		}
+
 		return -1;
 	},
 	allDead: function() {
@@ -156,6 +161,7 @@ var InvadersGroup = {
 				return false;
 			}
 		}
+
 		return true;
 	},
 	move: function(deltaTime) {
@@ -175,26 +181,21 @@ var InvadersGroup = {
 		
 		if (this.dir == this.RIGHT) {
 			this.posX += this.HORIZONTAL_MOVEMENT; 
-		}
-		else if (this.dir == this.LEFT) {
+		} else if (this.dir == this.LEFT) {
 			this.posX -= this.HORIZONTAL_MOVEMENT;
-		}
-		else if (this.dir == this.DOWN_TO_LEFT)  {
+		} else if (this.dir == this.DOWN_TO_LEFT)  {
 			this.posY += this.VERTICAL_MOVEMENT; 
 			this.dir = this.LEFT;
 			this.moveInterval = this.moveInterval * 0.85;
-		}							
-		else if(this.dir == this.DOWN_TO_RIGHT) {
+		} else if(this.dir == this.DOWN_TO_RIGHT) {
 			this.posY += this.VERTICAL_MOVEMENT;
 			this.dir = this.RIGHT;
 			this.moveInterval = this.moveInterval * 0.85;
 		}
 		
 		this.tryShoot();
-		
 	},
 	update: function(deltaTime) {
-
 		var now = Date.now();
 		var moveTime = now - this.moveStart;
 		
@@ -202,14 +203,11 @@ var InvadersGroup = {
 			this.move();
 			this.moveStart = now;
 		}
-		
-
 	}, 
 	draw: function() {
 		for(var y = 0; y < this.NUM_ROWS; y++) {
 			for (var x = 0; x < this.NUM_COLS; x++) {
 				if(this.invaders[x + y * this.NUM_COLS]) {
-
 					var invaderX = this.posX + x * this.CELL_WIDTH + (this.INVADER_WIDTH - this.CELL_WIDTH) / 2;
 					var invaderY = this.posY + y * this.CELL_HEIGHT + (this.INVADER_HEIGHT - this.CELL_HEIGHT) / 2;
 					
