@@ -10,7 +10,7 @@ function Player(x, y) {
 	this.velX = 0;
 	this.velY = 0;
 	this.bullet = null;
-	this.speed = 50;
+	this.speed = 450;
 	this.bounds = 50;
 	this.maxRight = World.WIDTH - this.width - this.bounds;
 

@@ -95,6 +95,9 @@ var Game = {
 		requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame ||
 			window.msRequestAnimationFrame || window.mozRequestAnimationFrame;
 
+		Sound.init();
+		Sound.setVolume(1);
+		
 		View.init(window.innerWidth, window.innerHeight);
 
 		window.addEventListener("keyup", function(event) { Key.onKeyup(event); }, false);

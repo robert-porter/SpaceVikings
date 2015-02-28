@@ -1,19 +1,4 @@
-﻿function AudioBank(files) {
-	this.bank = [];
-
-	for(var i = 0; i < files.length; i++) {
-		this.bank[i] = new Audio(files[i]);
-	}
-	
-	this.last = -1;
-}
-
-AudioBank.prototype.playNext = function() {
-	this.last = (this.last + 1) % this.bank.length;
-	this.bank[this.last].play();
-};
-
-var InvadersGroup = {
+﻿var InvadersGroup = {
 	LEFT: 0,
 	RIGHT: 1,
 	DOWN_TO_LEFT: 2,
@@ -36,7 +21,7 @@ var InvadersGroup = {
 	posX: 40,
 	posY: 0,
 	
-	audio: new AudioBank([
+	audio: new SoundBank([
 		"audio/move_1.mp3",
 		"audio/move_2.mp3",
 		"audio/move_3.mp3",
