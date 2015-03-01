@@ -64,6 +64,8 @@ var View = {
 
 		View.drawPoints(points);
 		View.drawLives(lives);
+	
+		this.ctx.shadowColor = "transparent";
 	},
 	drawPoints: function(points) {
 		this.ctx.fillText("POINTS: " + points, 10, 50);
