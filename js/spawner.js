@@ -5,7 +5,7 @@
 	},
 	update: function(deltaTime) {
 		var now = Date.now();
-		if (now - this.lastBonusShipTime > this.bonusShipInterval && Game.bonusShip.dead) {
+		if(now - this.lastBonusShipTime > this.bonusShipInterval && Game.bonusShip.dead) {
 			this.lastBonusShipTime = now;
 			Game.bonusShip = new BonusShip(World.WIDTH, 20);
 		}

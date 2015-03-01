@@ -36,7 +36,7 @@
 		this.dir = 0;
 		
 		for(var y = 0; y < this.NUM_ROWS; y++) {
-			for (var x = 0; x < this.NUM_COLS; x++) {
+			for(var x = 0; x < this.NUM_COLS; x++) {
 				this.invaders[x + y * this.NUM_COLS] = true;
 			}
 		}
@@ -47,11 +47,11 @@
 		this.sprite = new Image();
 		this.sprite.src = "images/test.png";
 	},
-	createInvaders: function(){
+	createInvaders: function() {
 		this.invaders = [];
 		
 		for(var y = 0; y < this.NUM_ROWS; y++) {
-			for (var x = 0; x < this.NUM_COLS; x++) {
+			for(var x = 0; x < this.NUM_COLS; x++) {
 				this.invaders[x + y * this.NUM_COLS] = true;
 			}
 		}
@@ -62,8 +62,7 @@
 		}
 		
 		for(var y = 0; y < this.NUM_ROWS; y++) {
-			for (var x = 0; x < this.NUM_COLS; x++) {
-				
+			for(var x = 0; x < this.NUM_COLS; x++) {
 				if(this.invaders[x + y * this.NUM_COLS]) {
 					var invaderX = this.posX + x * this.CELL_WIDTH + (this.INVADER_WIDTH - this.CELL_WIDTH) / 2;
 					var invaderY = this.posY + y * this.CELL_HEIGHT + (this.INVADER_HEIGHT - this.CELL_HEIGHT) / 2;
@@ -81,21 +80,21 @@
 	},
 	invadersInFront: function(col, row) {
 		for(var y = this.NUM_ROWS-1; y > row; y--) {
-			if(!this.invaders[col + y * this.NUM_COLS])
+			if(!this.invaders[col + y * this.NUM_COLS]) {
 				return true;
+			}
 		}
 
 		return false;
 	},
 	tryShoot: function(deltaTime) {
 		// first one in each row get a chance to shoot.  
-		for (var x = 0; x < this.NUM_COLS; x++) {
+		for(var x = 0; x < this.NUM_COLS; x++) {
 			for(var y = this.NUM_ROWS-1; y >= 0; y--) {
 				var index = x + y * this.NUM_COLS;
 
 				if(this.invaders[index]) {
 					if(Math.random() < 0.05) {
-						
 						var bulletX = this.posX + x * this.CELL_WIDTH + (this.INVADER_WIDTH - this.CELL_WIDTH) / 2 + this.INVADER_WIDTH / 2;
 						var bulletY = this.posY + y * this.CELL_HEIGHT + (this.INVADER_HEIGHT - this.CELL_HEIGHT) / 2 + this.INVADER_HEIGHT / 2;
 						var invaderBullet = new InvaderBullet(bulletX, bulletY);
@@ -108,9 +107,10 @@
 		}		
 	},
 	getLeftBoundaryXIndex: function() { 
-		for (var x = 0; x < this.NUM_COLS; x++) {
+		for(var x = 0; x < this.NUM_COLS; x++) {
 			for(var y = this.NUM_ROWS-1; y >= 0; y--) {
 				var index = x + y * this.NUM_COLS;
+
 				if(this.invaders[index]) {
 					return x;
 				}
@@ -120,9 +120,10 @@
 		return -1;
 	},
 	getRightBoundaryXIndex: function() {
-		for (var x = this.NUM_COLS-1; x >= 0; x--) {
+		for(var x = this.NUM_COLS-1; x >= 0; x--) {
 			for(var y = this.NUM_ROWS-1; y >= 0; y--) {
 				var index = x + y * this.NUM_COLS;
+
 				if(this.invaders[index]) {
 					return x;
 				}
@@ -133,8 +134,9 @@
 	},
 	getBottomBoundaryYIndex: function() {
 		for(var y = this.NUM_ROWS-1; y >= 0; y--) {
-			for (var x = 0; x < this.NUM_COLS; x++) {
+			for(var x = 0; x < this.NUM_COLS; x++) {
 				var index = x + y * this.NUM_COLS;
+
 				if(this.invaders[index]) {
 					return y;
 				}
@@ -153,10 +155,11 @@
 		return true;
 	},
 	move: function(deltaTime) {
-		this.audio.playNext();
-		
 		var leftIndex = this.getLeftBoundaryXIndex();
 		var rightIndex = this.getRightBoundaryXIndex();
+
+		this.audio.playNext();
+		
 		if(this.posX + leftIndex * this.CELL_WIDTH <= this.HORIZONTAL_MOVEMENT && this.dir != this.RIGHT) {
 			this.dir = this.DOWN_TO_RIGHT;
 		}
@@ -166,11 +169,11 @@
 		}
 		
 		
-		if (this.dir == this.RIGHT) {
+		if(this.dir == this.RIGHT) {
 			this.posX += this.HORIZONTAL_MOVEMENT; 
-		} else if (this.dir == this.LEFT) {
+		} else if(this.dir == this.LEFT) {
 			this.posX -= this.HORIZONTAL_MOVEMENT;
-		} else if (this.dir == this.DOWN_TO_LEFT)  {
+		} else if(this.dir == this.DOWN_TO_LEFT)  {
 			this.posY += this.VERTICAL_MOVEMENT; 
 			this.dir = this.LEFT;
 			this.moveInterval = this.moveInterval * 0.85;
@@ -193,7 +196,7 @@
 	}, 
 	draw: function() {
 		for(var y = 0; y < this.NUM_ROWS; y++) {
-			for (var x = 0; x < this.NUM_COLS; x++) {
+			for(var x = 0; x < this.NUM_COLS; x++) {
 				if(this.invaders[x + y * this.NUM_COLS]) {
 					var invaderX = this.posX + x * this.CELL_WIDTH + (this.INVADER_WIDTH - this.CELL_WIDTH) / 2;
 					var invaderY = this.posY + y * this.CELL_HEIGHT + (this.INVADER_HEIGHT - this.CELL_HEIGHT) / 2;

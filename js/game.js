@@ -124,12 +124,13 @@ var Game = {
 		this.player.x = World.CENTER;
 				
 		var bunker = null;
+
 		for(var x = 0; x < 4; x++) {
 			bunker = new Bunker(100 + x * 100, 350, 50, 50);
 			this.bunkers.push(bunker);
 		}
 		
-		this.bonusShip = new BonusShip(0,0);
+		this.bonusShip = new BonusShip(0, 0);
 		this.bonusShip.dead = true;
 		
 		InvadersGroup.createInvaders(); // TODO: this is confusing
@@ -160,8 +161,6 @@ var Game = {
 		this.frame();
 	},
 	update: function(deltaTime) {
-		var i = 0;
-		
 		Spawner.update(deltaTime);
 		this.player.update(deltaTime);
 		this.bullet.update(deltaTime);
@@ -173,7 +172,6 @@ var Game = {
 
 		// get rid of dead objects 
 		this.invaderBullets = this.invaderBullets.filter(function(o) { return !o.dead; });
-		
 
 		if(InvadersGroup.posY + InvadersGroup.getBottomBoundaryYIndex() * InvadersGroup.CELL_HEIGHT + InvadersGroup.CELL_HEIGHT > 500) {
 			this.lives--;
@@ -194,7 +192,7 @@ var Game = {
 			if(!this.bullet.dead)
 				this.bunkers[i].bulletCollision(this.bullet);
 			
-			for(j = 0; j < this.invaderBullets.length; j++){ 
+			for(j = 0; j < this.invaderBullets.length; j++) { 
 				this.bunkers[i].bulletCollision(this.invaderBullets[j]);
 			}
 		}
@@ -232,8 +230,8 @@ var Game = {
 };
 
 var Menu = {
-	update: function(){
-		if(Key.isDown(Key.PAUSE)){
+	update: function() {
+		if(Key.isDown(Key.PAUSE)) {
 			this.DisplayMenu();
 			document.getElementById("options").style.display = "none";
 		}

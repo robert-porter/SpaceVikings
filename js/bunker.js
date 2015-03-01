@@ -11,7 +11,7 @@ function Bunker(x, y, w, h) {
 				this.parts[x + y * 4] = 0;
 			}
 			else {
-				this.parts[x + y * 4] = 4; // hitpoints  
+				this.parts[x + y * 4] = 4; //Hitpoints  
 			}
 		}
 	}
@@ -24,10 +24,10 @@ Bunker.prototype.draw = function(deltaTime) {
 	for(var x = 0; x < 4; x++) {
 		for(var y = 0; y < 4; y++) {
 			if(this.parts[x + y * 4] > 0) {
-				View.ctx.fillStyle = "rgb(" + Math.trunc((255.0 / this.parts[x + y * 4])) + ", 0, 0";
+				View.ctx.fillStyle = "rgb(" + Math.trunc((255 / this.parts[x + y * 4])) + ", 0, 0";
 				View.ctx.fillRect(
-					this.x + this.cellWidth * x, 
-					this.y + this.cellHeight * y, 
+					this.x + (this.cellWidth * x),
+					this.y + (this.cellHeight * y),
 					this.cellWidth, this.cellHeight
 				);
 			}
@@ -42,15 +42,15 @@ Bunker.prototype.bulletCollision = function(bullet) {
 		for(var y = 0; y < 4; y++) {
 			if(this.parts[x + y * 4] > 0) {
 				part = new GameObject(
-					this.x + this.cellWidth * x, 
-					this.y + this.cellHeight * y, 
-					this.cellWidth, this.cellHeight);
+					this.x + (this.cellWidth * x),
+					this.y + (this.cellHeight * y),
+					this.cellWidth, this.cellHeight
+				);
 				
 				if(intersect(part, bullet)) {
 					this.parts[x + y * 4] = this.parts[x + y * 4] - 1;
 					bullet.dead = true;
 				}
-
 			}
 		}
 	}
