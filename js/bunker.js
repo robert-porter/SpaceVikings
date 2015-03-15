@@ -7,10 +7,9 @@ function Bunker(x, y, w, h) {
 	
 	for(var x = 0; x < 4; x++) {
 		for(var y = 0; y < 4; y++) {
-			if((x == 1 || x == 2) && (y == 2 || y == 3)) {
+			if((x === 1 || x === 2) && (y === 2 || y === 3)) {
 				this.parts[x + y * 4] = 0;
-			}
-			else {
+			} else {
 				this.parts[x + y * 4] = 4; //Hitpoints  
 			}
 		}
@@ -24,7 +23,9 @@ Bunker.prototype.draw = function(deltaTime) {
 	for(var x = 0; x < 4; x++) {
 		for(var y = 0; y < 4; y++) {
 			if(this.parts[x + y * 4] > 0) {
-				View.ctx.fillStyle = "rgb(" + Math.trunc((255 / this.parts[x + y * 4])) + ", 0, 0";
+				var hp = this.parts[x + y * 4];
+
+				View.ctx.fillStyle = "rgba(" + Math.trunc((255 / hp)) + ", 0, 0, 1)";
 				View.ctx.fillRect(
 					this.x + (this.cellWidth * x),
 					this.y + (this.cellHeight * y),
