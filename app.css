@@ -70,12 +70,12 @@ canvas {
 
 #options-menu {
 	position: absolute;
-	top: 240px;
+	top: 50px;
 	left: 0px;
 	z-index: 4;
 	display: none;
 	width: 598px;
-	height: 60px;
+	height: 380px;
 	text-align: center;
 	background-color: #5FAF64;
 	color: #fff;
@@ -101,6 +101,22 @@ canvas {
     -ms-user-select: none;
 }
 
+.option-ticker {
+	font-family: "Courier New", Courier, monospace;
+	display: inline-block;
+	width: 25px;
+	cursor: pointer;
+	border-radius: 7px;
+}
+.option-ticker:hover {
+	background-color: rgba(0, 100, 200, 0.25);
+	color: #fed;
+}
+.option-ticker:active {
+    color: #c50;
+    background-color: rgba(0, 50, 200, 0.25);
+}
+
 #volume-control {
 	width: 130px;
 }
@@ -110,18 +126,9 @@ canvas {
 	width: 60px;
 }
 
-.volume-ticker {
-	font-family: "Courier New", Courier, monospace;
-	display: inline-block;
-	width: 25px;
-	cursor: pointer;
-	border-radius: 7px;
-}
-.volume-ticker:hover {
-	background-color: rgba(0, 100, 200, 0.25);
-	color: #fed;
-}
-.volume-ticker:active {
-    color: #c50;
-    background-color: rgba(0, 50, 200, 0.25);
+#options-close {
+	font-size: 0.8em;
+	position: absolute;
+	bottom: 0px;
+	left: 244px;
 }

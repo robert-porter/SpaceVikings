@@ -15,7 +15,6 @@
 	VERTICAL_MOVEMENT: 20, // does not need to be a multiple the of size of an invader cell 
 	
 	dir: 0,
-	moveInterval: 1000,
 	moveStart: Date.now(),
 	numMoves: 0,
 	posX: 40,
@@ -30,7 +29,8 @@
 	invaders: [],
 
 	init: function() {
-		this.moveInterval = 1000;
+		console.log(Game.difficulty);
+		this.moveInterval = (13 - Game.difficulty) * 170;
 		this.moveStart = Date.now();
 		this.numMoves = 0;
 		this.dir = 0;
@@ -71,7 +71,7 @@
 					if(intersect(gameObject, bullet)) {
 						this.invaders[x + y * this.NUM_COLS] = false;
 						bullet.dead = true;
-						Game.points += 20;
+						Game.points += 4 * Game.difficulty;
 					}
 				}
 				
@@ -88,13 +88,20 @@
 		return false;
 	},
 	tryShoot: function(deltaTime) {
+		var shotchance = 0.05;
+
+		//Avoid putting the player to sleep on difficulty 1-2
+		if(Game.difficulty < 3) {
+			shotchance = 0.1;
+		}
+
 		// first one in each row get a chance to shoot.  
 		for(var x = 0; x < this.NUM_COLS; x++) {
 			for(var y = this.NUM_ROWS-1; y >= 0; y--) {
 				var index = x + y * this.NUM_COLS;
 
 				if(this.invaders[index]) {
-					if(Math.random() < 0.05) {
+					if(Math.random() < shotchance) {
 						var bulletX = this.posX + x * this.CELL_WIDTH + (this.INVADER_WIDTH - this.CELL_WIDTH) / 2 + this.INVADER_WIDTH / 2;
 						var bulletY = this.posY + y * this.CELL_HEIGHT + (this.INVADER_HEIGHT - this.CELL_HEIGHT) / 2 + this.INVADER_HEIGHT / 2;
 						var invaderBullet = new InvaderBullet(bulletX, bulletY);

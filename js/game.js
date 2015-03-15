@@ -42,6 +42,8 @@ var View = {
 		this.canvas.id = "game-canvas";
 
 		document.getElementById("game-wrapper").appendChild(this.canvas);
+		document.getElementById("volume-value").innerHTML = Game.volume;
+		document.getElementById("difficulty-value").innerHTML = Game.difficulty;
 	},
 	clear: function(color) {
 		// Store the current transformation matrix
@@ -93,6 +95,7 @@ var Game = {
 	points: 0,
 	lives: 0,
 	volume: 100,
+	difficulty: 5,
 
 	init: function() {
 		requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame ||
@@ -105,8 +108,6 @@ var Game = {
 		window.addEventListener("keyup", function(event) { Key.onKeyup(event); }, false);
 		window.addEventListener("keydown", function(event) { Key.onKeydown(event); }, false);
 		
-		this.startLevel();
-
 		Menu.DisplayMenu();
 	},
 	startLevel: function() {
@@ -244,16 +245,23 @@ var Menu = {
 	},
 	Play: function() {
 		document.getElementById("menu").className = "fade";
+		
 		setTimeout(function() {
 			document.getElementById("menu").style.display = "none";
 			document.getElementById("game-canvas").className = "fade";
 			Game.isRunning = true;
+			Game.startLevel();
 		}, 150);
 
 		return false;
 	},
 	Options: function() {
 		document.getElementById("options-menu").style.display = "block";
+
+		return false;
+	},
+	CloseOptions: function() {
+		document.getElementById("options-menu").style.display = "none";
 
 		return false;
 	},
@@ -270,40 +278,55 @@ var Options = {
 		clearInterval(Options.holding);
 		Options.down = false;
 	},
-	hold: function(option, value) {
+	hold: function(option, dir) {
 		Options.down = true;
-		Options[option](value);
+		Options.tick(option, dir);
 
 		Options.holding = setTimeout(function() {
-			Options.hold_start(option, value);
+			Options.hold_start(option, dir);
 		}, 200);
 	},
-	hold_start: function(option, value) {
+	hold_start: function(option, dir) {
 		Options.holding = setInterval(function() {
 			if(Options.down) {
-				Options[option](value);
+				Options.tick(option, dir);
 			} else {
 				clearInterval(Options.holding);
 			}
 		}, 10);
 	},
-
-	volume: function(dir) {
-		var set;
+	tick: function(option, dir) {
+		var amount;
 
 		if(dir === "-") {
-			set = -1;
+			amount = -1;
 		} else {
-			set = 1;
+			amount = 1;
 		}
 
-		set = Game.volume + set;
+		Options[option](amount);
+	},
 
-		if(set <= 100 && set >= 0) {
-			Game.volume = set;
+	volume: function(amount) {
+		var volume = Game.volume + amount;
+
+		if(volume <= 100 && volume >= 0) {
+			Game.volume = volume;
 		}
 		
 		document.getElementById("volume-value").innerHTML = Game.volume;
+
+		return false;
+	},
+	difficulty: function(amount) {
+		var difficulty = Game.difficulty + amount;
+
+		if(difficulty <= 10 && difficulty >= 1) {
+			Game.difficulty = difficulty;
+			console.log(difficulty);
+		}
+		
+		document.getElementById("difficulty-value").innerHTML = Game.difficulty;
 
 		return false;
 	}

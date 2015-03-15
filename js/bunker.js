@@ -10,7 +10,7 @@ function Bunker(x, y, w, h) {
 			if((x === 1 || x === 2) && (y === 2 || y === 3)) {
 				this.parts[x + y * 4] = 0;
 			} else {
-				this.parts[x + y * 4] = 4; //Hitpoints  
+				this.parts[x + y * 4] = 10 - Game.difficulty; //Hitpoints  
 			}
 		}
 	}

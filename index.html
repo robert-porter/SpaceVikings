@@ -16,10 +16,19 @@
 			<div id="options-menu">
 				Volume:
 				<span class="option-control" id="volume-control">
-					<span class="volume-ticker" onmousedown="Options.hold('volume', '-');" onmouseup="Options.release();">-</span>
-					<span id="volume-value">100</span>
-					<span class="volume-ticker" onmousedown="Options.hold('volume', '+');" onmouseup="Options.release();">+</span>
+					<span class="option-ticker" onmousedown="Options.hold('volume', '-');" onmouseup="Options.release();">-</span>
+					<span id="volume-value"></span>
+					<span class="option-ticker" onmousedown="Options.hold('volume', '+');" onmouseup="Options.release();">+</span>
 				</span>
+				<br>
+				Difficulty:
+				<span class="option-control" id="difficulty-control">
+					<span class="option-ticker" onmousedown="Options.hold('difficulty', '-');" onmouseup="Options.release();">-</span>
+					<span id="difficulty-value"></span>
+					<span class="option-ticker" onmousedown="Options.hold('difficulty', '+');" onmouseup="Options.release();">+</span>
+				</span>
+
+				<a href="#" class="menu-button" id="options-close" onclick="return Menu.CloseOptions();">Close</a><br>
 			</div>
 		</div>
 		<script src="js/game_object.js"></script>
