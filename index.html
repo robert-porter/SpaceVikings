@@ -14,7 +14,12 @@
 				<a href="#" class="menu-button" id="credits" onclick="return Menu.Credits();">Credits</a><br>
 			</div>
 			<div id="options-menu">
-				Sound: [------]
+				Volume:
+				<span class="option-control" id="volume-control">
+					<span class="volume-ticker" onmousedown="Options.hold('volume', '-');" onmouseup="Options.release();">-</span>
+					<span id="volume-value">100</span>
+					<span class="volume-ticker" onmousedown="Options.hold('volume', '+');" onmouseup="Options.release();">+</span>
+				</span>
 			</div>
 		</div>
 		<script src="js/game_object.js"></script>

@@ -86,3 +86,42 @@ canvas {
 	border: 1px solid #050;
 	padding-top: 20px;
 }
+
+.option-control {
+	display: inline-block;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -ms-user-select: none;
+}
+.option-control * {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -ms-user-select: none;
+}
+
+#volume-control {
+	width: 130px;
+}
+
+#volume-value {
+	display: inline-block;
+	width: 60px;
+}
+
+.volume-ticker {
+	font-family: "Courier New", Courier, monospace;
+	display: inline-block;
+	width: 25px;
+	cursor: pointer;
+	border-radius: 7px;
+}
+.volume-ticker:hover {
+	background-color: rgba(0, 100, 200, 0.25);
+	color: #fed;
+}
+.volume-ticker:active {
+    color: #c50;
+    background-color: rgba(0, 50, 200, 0.25);
+}

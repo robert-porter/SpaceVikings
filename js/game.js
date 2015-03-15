@@ -92,13 +92,13 @@ var Game = {
 	bunusShip: null,
 	points: 0,
 	lives: 0,
+	volume: 100,
 
 	init: function() {
 		requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame ||
 			window.msRequestAnimationFrame || window.mozRequestAnimationFrame;
 
 		Sound.init();
-		Sound.setVolume(1);
 		
 		View.init(window.innerWidth, window.innerHeight);
 
@@ -161,6 +161,8 @@ var Game = {
 		this.frame();
 	},
 	update: function(deltaTime) {
+		Sound.setVolume(Game.volume / 100);
+
 		Spawner.update(deltaTime);
 		this.player.update(deltaTime);
 		this.bullet.update(deltaTime);
@@ -256,6 +258,53 @@ var Menu = {
 		return false;
 	},
 	Credits: function() {
+		return false;
+	}
+};
+
+
+var Options = {
+	down: false,
+	
+	release: function() {
+		clearInterval(Options.holding);
+		Options.down = false;
+	},
+	hold: function(option, value) {
+		Options.down = true;
+		Options[option](value);
+
+		Options.holding = setTimeout(function() {
+			Options.hold_start(option, value);
+		}, 200);
+	},
+	hold_start: function(option, value) {
+		Options.holding = setInterval(function() {
+			if(Options.down) {
+				Options[option](value);
+			} else {
+				clearInterval(Options.holding);
+			}
+		}, 10);
+	},
+
+	volume: function(dir) {
+		var set;
+
+		if(dir === "-") {
+			set = -1;
+		} else {
+			set = 1;
+		}
+
+		set = Game.volume + set;
+
+		if(set <= 100 && set >= 0) {
+			Game.volume = set;
+		}
+		
+		document.getElementById("volume-value").innerHTML = Game.volume;
+
 		return false;
 	}
 };
