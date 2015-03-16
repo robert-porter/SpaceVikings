@@ -22,6 +22,14 @@ GameObject.prototype.draw = function(deltaTime) {
 GameObject.prototype.update = function(deltaTime) {
 	this.x = this.x + this.velX * deltaTime;
 	this.y = this.y + this.velY * deltaTime;
+	
+	//Kill object if it's outside the world boundaries
+	if(
+		(this.x + this.width) < 0 || this.x > World.WIDTH ||
+		(this.y + this.height) < 0 || this.y > World.HEIGHT
+	) {
+		this.dead = true;
+	}
 };
 
 function intersect(o1, o2) {
