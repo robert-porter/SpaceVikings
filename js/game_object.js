@@ -6,8 +6,6 @@
 	this.velX = 0;
 	this.velY = 0;
 	this.dead = false;
-	this.sprite = new Image();
-	this.sprite.src = "";
 }
 
 GameObject.prototype.draw = function(deltaTime) {
@@ -18,7 +16,7 @@ GameObject.prototype.draw = function(deltaTime) {
 	// View.ctx.fillStyle = "#FF0000";
 	// View.ctx.fillRect(this.x, this.y, this.width, this.height);
 
-	View.ctx.drawImage(this.sprite, this.x, this.y);
+	this.sprite.draw(View.ctx, this.x, this.y);
 };
 
 GameObject.prototype.update = function(deltaTime) {

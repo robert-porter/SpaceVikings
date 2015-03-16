@@ -5,8 +5,12 @@ function Bullet(x, y) {
 	GameObject.call(this, x, y, 12, 12);
 	this.velY = -700;
 
-	this.sprite = new Image();
-	this.sprite.src = "images/Bullet.png";
+	this.sprite = new Sprite({
+		path: "images/Bullet.png",
+		type: "static",
+		width: 12,
+		height: 12
+	});
 }
 
 Bullet.prototype.update = function(deltaTime) { 

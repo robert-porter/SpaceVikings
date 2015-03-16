@@ -29,7 +29,6 @@
 	invaders: [],
 
 	init: function() {
-		console.log(Game.difficulty);
 		this.moveInterval = (13 - Game.difficulty) * 170;
 		this.moveStart = Date.now();
 		this.numMoves = 0;

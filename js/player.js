@@ -14,8 +14,12 @@ function Player(x, y) {
 	this.bounds = 50;
 	this.maxRight = World.WIDTH - this.width - this.bounds;
 
-	this.sprite = new Image();
-	this.sprite.src = "images/Player.png";
+	this.sprite = new Sprite({
+		path: "images/Player.png",
+		type: "static",
+		width: 32,
+		height: 32
+	});
 }
 
 Player.prototype.update = function(deltaTime) {
