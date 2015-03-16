@@ -44,8 +44,14 @@
 		this.posX = 0;
 		this.posY = 0;
 		
-		this.sprite = new Image();
-		this.sprite.src = "images/test.png";
+		this.sprite = new Sprite({
+			path: "images/Invader.png",
+			type: "spritesheet",
+			width: 32,
+			height: 32,
+			sheet_width: 4,
+			sheet_height: 1
+		});
 	},
 	createInvaders: function() {
 		this.invaders = [];
@@ -191,6 +197,7 @@
 		}
 		
 		this.tryShoot();
+		this.sprite.step();
 	},
 	update: function(deltaTime) {
 		var now = Date.now();
@@ -208,7 +215,7 @@
 					var invaderX = this.posX + x * this.CELL_WIDTH + (this.INVADER_WIDTH - this.CELL_WIDTH) / 2;
 					var invaderY = this.posY + y * this.CELL_HEIGHT + (this.INVADER_HEIGHT - this.CELL_HEIGHT) / 2;
 					
-					View.ctx.drawImage(this.sprite, invaderX, invaderY, this.INVADER_WIDTH, this.INVADER_HEIGHT);
+					this.sprite.draw(View.ctx, invaderX, invaderY);
 				}
 			}
 		}
