@@ -81,16 +81,16 @@
 						switch(y) {
 							case 4:
 							case 3:
-								Game.points = 2 * Game.difficulty;
+								Game.points += 2 * Game.difficulty;
 							break;
 
 							case 2:
 							case 1:
-								Game.points = 4 * Game.difficulty;
+								Game.points += 4 * Game.difficulty;
 							break;
 
 							case 0:
-								Game.points = 8 * Game.difficulty;
+								Game.points += 8 * Game.difficulty;
 							break;
 						}
 					}
