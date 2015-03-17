@@ -106,11 +106,16 @@
 
 		// first one in each row get a chance to shoot.  
 		for(var x = 0; x < this.NUM_COLS; x++) {
-			for(var y = this.NUM_ROWS-1; y >= 0; y--) {
+			var adjusted_chance = shotchance;
+
+			for(var y = this.NUM_ROWS - 1; y >= 0; y--) {
 				var index = x + y * this.NUM_COLS;
 
 				if(this.invaders[index]) {
-					if(Math.random() < shotchance) {
+					//Closer rows shoot more often
+					adjusted_chance += y * 0.01;
+
+					if(Math.random() < adjusted_chance) {
 						var bulletX = this.posX + x * this.CELL_WIDTH + (this.INVADER_WIDTH - this.CELL_WIDTH) / 2 + this.INVADER_WIDTH / 2;
 						var bulletY = this.posY + y * this.CELL_HEIGHT + (this.INVADER_HEIGHT - this.CELL_HEIGHT) / 2 + this.INVADER_HEIGHT / 2;
 						var invaderBullet = new InvaderBullet(bulletX, bulletY);

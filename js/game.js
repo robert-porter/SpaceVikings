@@ -92,7 +92,7 @@ var Game = {
 	invaderBullets: [],
 	bunkers: [],
 	bunusShip: null,
-	bonusShipCount: 0,
+	bonusShipsKilled: 0,
 	points: 0,
 	lives: 0,
 	volume: 100,
@@ -202,9 +202,11 @@ var Game = {
 		
 		if(!this.bullet.dead && !this.bonusShip.dead) {
 			if(intersect(this.bonusShip, this.bullet)) {
+            	Game.bonusShipsKilled++;
 				this.bonusShip.dead = true;
 				this.bullet.dead = true;
-				this.points += (20 * Game.difficulty * this.bonusShipCount);
+				
+				this.points += (20 * Game.difficulty * this.bonusShipsKilled);
 				Spawner.newSpawn();
 			}
 		}
