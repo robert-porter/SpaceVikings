@@ -26,10 +26,10 @@ var Key = {
 		return this.pressed[keyCode];
 	},
 	onKeydown: function(event) {
-		this.pressed[event.keyCode] = true;
+		Key.pressed[event.keyCode] = true;
 	},
 	onKeyup: function(event) {
-		this.pressed[event.keyCode] = false;
+		Key.pressed[event.keyCode] = false;
 	}
 };
 
@@ -106,8 +106,8 @@ var Game = {
 		
 		View.init(window.innerWidth, window.innerHeight);
 
-		window.addEventListener("keyup", function(event) { Key.onKeyup(event); }, false);
-		window.addEventListener("keydown", function(event) { Key.onKeydown(event); }, false);
+		window.addEventListener("keyup", Key.onKeyup, false);
+		window.addEventListener("keydown", Key.onKeydown, false);
 		
 		Menu.DisplayMenu();
 	},
@@ -135,7 +135,6 @@ var Game = {
 		this.bonusShip = new BonusShip(0, 0);
 		this.bonusShip.dead = true;
 		
-		InvadersGroup.createInvaders(); // TODO: this is confusing
 		InvadersGroup.init(); 
 		
 		Spawner.init();
@@ -206,7 +205,6 @@ var Game = {
 				this.bonusShip.dead = true;
 				this.bullet.dead = true;
 				this.points += (20 * Game.difficulty * this.bonusShipCount);
-				console.log("spawning");
 				Spawner.newSpawn();
 			}
 		}
@@ -326,7 +324,6 @@ var Options = {
 
 		if(difficulty <= 10 && difficulty >= 1) {
 			Game.difficulty = difficulty;
-			console.log(difficulty);
 		}
 		
 		document.getElementById("difficulty-value").innerHTML = Game.difficulty;

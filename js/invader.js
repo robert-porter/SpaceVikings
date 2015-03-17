@@ -29,6 +29,8 @@
 	invaders: [],
 
 	init: function() {
+		InvadersGroup.createInvaders();
+
 		this.moveInterval = (13 - Game.difficulty) * 170;
 		this.moveStart = Date.now();
 		this.numMoves = 0;
@@ -53,8 +55,6 @@
 		});
 	},
 	createInvaders: function() {
-		this.invaders = [];
-		
 		for(var y = 0; y < this.NUM_ROWS; y++) {
 			for(var x = 0; x < this.NUM_COLS; x++) {
 				this.invaders[x + y * this.NUM_COLS] = true;

@@ -20,8 +20,6 @@
         var interval = this.spawnInterval + Math.floor(Math.random() * 2 * this.spawnIntervalVariation) - this.spawnIntervalVariation,
             _this = this;
 
-        console.log(interval);
-
         this.spawning = setTimeout(function() {
             _this.readyToSpawn = true;
         }, interval);
