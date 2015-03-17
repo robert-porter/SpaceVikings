@@ -279,22 +279,27 @@ var Options = {
 		clearInterval(Options.holding);
 		Options.down = false;
 	},
-	hold: function(option, dir) {
+	hold: function(ticker) {
+		var control = ticker.parentNode;
+		var dir = ticker.innerHTML;
+		var option = control.dataset.option;
+		var speed = parseInt(control.dataset.speed, 10);
+
 		Options.down = true;
 		Options.tick(option, dir);
 
 		Options.holding = setTimeout(function() {
-			Options.hold_start(option, dir);
+			Options.hold_start(option, dir, speed);
 		}, 200);
 	},
-	hold_start: function(option, dir) {
+	hold_start: function(option, dir, speed) {
 		Options.holding = setInterval(function() {
 			if(Options.down) {
 				Options.tick(option, dir);
 			} else {
 				clearInterval(Options.holding);
 			}
-		}, 10);
+		}, speed);
 	},
 	tick: function(option, dir) {
 		var amount;
