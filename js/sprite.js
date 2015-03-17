@@ -20,7 +20,7 @@ function Sprite(options) {
             this.sheet.px_width = this.sheet.width * this.width;
             this.sheet.px_height = this.sheet.height * this.height;
 
-            this.max_frames = (this.sheet.width * this.sheet.height) - 1;
+            this.max_frames = this.sheet.width * this.sheet.height;
             this.frame = 0;
             this.frameX = 0;
             this.frameY = 0;
@@ -46,10 +46,7 @@ Sprite.prototype.step = function(frames) {
     }
 
     var newframe = this.frame + (frames || 1);
-
-    if(newframe > this.max_frames) {
-        newframe = newframe - this.max_frames - 1;
-    }
+    newframe = newframe % this.max_frames;
 
     //TODO: Spritesheets with multiple rows
     this.frameX = newframe * this.width;
