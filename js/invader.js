@@ -27,6 +27,7 @@
 		"audio/move_4.mp3"
 	]),
 	invaders: [],
+	sprites: [3, 2, 2, 1, 1],
 
 	init: function() {
 		InvadersGroup.createInvaders();
@@ -42,14 +43,16 @@
 			}
 		}
 		
-		this.sprite = new Sprite({
-			path: "images/Invader.png",
-			type: "spritesheet",
-			width: 32,
-			height: 32,
-			sheet_width: 4,
-			sheet_height: 1
-		});
+		for(var i = 0; i < this.NUM_ROWS; i++) {
+			this.sprites[i] = new Sprite({
+				path: "images/Invader_" + this.sprites[i] + ".png",
+				type: "spritesheet",
+				width: 32,
+				height: 32,
+				sheet_width: 4,
+				sheet_height: 1
+			});
+		}
 	},
 	createInvaders: function() {
 		for(var y = 0; y < this.NUM_ROWS; y++) {
@@ -205,7 +208,10 @@
 		}
 		
 		this.tryShoot();
-		this.sprite.step();
+		
+		for(var i = 0; i < this.NUM_ROWS; i++) {
+			this.sprites[i].step();
+		}
 	},
 	update: function(deltaTime) {
 		var now = Date.now();
@@ -223,7 +229,7 @@
 					var invaderX = this.posX + x * this.CELL_WIDTH + (this.INVADER_WIDTH - this.CELL_WIDTH) / 2;
 					var invaderY = this.posY + y * this.CELL_HEIGHT + (this.INVADER_HEIGHT - this.CELL_HEIGHT) / 2;
 					
-					this.sprite.draw(View.ctx, invaderX, invaderY);
+					this.sprites[y].draw(View.ctx, invaderX, invaderY);
 				}
 			}
 		}
