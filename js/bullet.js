@@ -2,14 +2,14 @@
 Bullet.prototype.constructor = Bullet;
 
 function Bullet(x, y) {
-	GameObject.call(this, x, y, 12, 12);
+	GameObject.call(this, x, y, 4, 16);
 	this.velY = -700;
 
 	this.sprite = new Sprite({
 		path: "images/Bullet.png",
 		type: "static",
-		width: 12,
-		height: 12
+		width: 4,
+		height: 16
 	});
 }
 
