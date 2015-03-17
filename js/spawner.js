@@ -1,6 +1,6 @@
 ﻿var Spawner = {
     readyToSpawn: false,
-    spawnInterval: 10000,
+    spawnInterval: 12000,
     spawnIntervalVariation: 2000,
     init: function() {
         this.newSpawn();

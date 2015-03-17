@@ -17,8 +17,8 @@
 	dir: 0,
 	moveStart: Date.now(),
 	numMoves: 0,
-	posX: 40,
-	posY: 0,
+	posX: 20,
+	posY: 20,
 	
 	audio: new SoundBank([
 		"audio/move_1.mp3",
@@ -41,9 +41,6 @@
 				this.invaders[x + y * this.NUM_COLS] = true;
 			}
 		}
-		
-		this.posX = 0;
-		this.posY = 0;
 		
 		this.sprite = new Sprite({
 			path: "images/Invader.png",
@@ -98,15 +95,6 @@
 				
 			}
 		}
-	},
-	invadersInFront: function(col, row) {
-		for(var y = this.NUM_ROWS-1; y > row; y--) {
-			if(!this.invaders[col + y * this.NUM_COLS]) {
-				return true;
-			}
-		}
-
-		return false;
 	},
 	tryShoot: function(deltaTime) {
 		var shotchance = 0.05;
