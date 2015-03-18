@@ -70,12 +70,12 @@ canvas {
 
 #options-menu {
 	position: absolute;
-	top: 50px;
+	top: 0px;
 	left: 0px;
 	z-index: 4;
 	display: none;
 	width: 598px;
-	height: 380px;
+	height: 598px;
 	text-align: center;
 	background-color: #5FAF64;
 	color: #fff;
@@ -84,7 +84,10 @@ canvas {
 	border-radius: 7px;
 	font-size: 2em;
 	border: 1px solid #050;
-	padding-top: 20px;
+}
+
+.option-group {
+	padding-bottom: 15px;
 }
 
 .option-control {
@@ -117,6 +120,17 @@ canvas {
     background-color: rgba(0, 50, 200, 0.25);
 }
 
+#options-close {
+	font-size: 0.8em;
+	position: absolute;
+	bottom: 0px;
+	left: 244px;
+}
+
+#volume-group {
+	margin-top: 20px;
+}
+
 #volume-control {
 	width: 130px;
 }
@@ -126,9 +140,11 @@ canvas {
 	width: 60px;
 }
 
-#options-close {
-	font-size: 0.8em;
-	position: absolute;
-	bottom: 0px;
-	left: 244px;
+#difficulty-control {
+	width: 120px;
+}
+
+#difficulty-value {
+	display: inline-block;
+	width: 40px;
 }

@@ -14,19 +14,23 @@
 				<a href="#" class="menu-button" id="credits" onclick="return Menu.Credits();">Credits</a><br>
 			</div>
 			<div id="options-menu">
-				Volume:
-				<span class="option-control" id="volume-control" data-option="volume" data-speed="10">
-					<span class="option-ticker" onmousedown="Options.hold(this);" onmouseup="Options.release();">-</span>
-					<span id="volume-value"></span>
-					<span class="option-ticker" onmousedown="Options.hold(this);" onmouseup="Options.release();">+</span>
-				</span>
-				<br>
-				Difficulty:
-				<span class="option-control" id="difficulty-control" data-option="difficulty" data-speed="100">
-					<span class="option-ticker" onmousedown="Options.hold(this);" onmouseup="Options.release();">-</span>
-					<span id="difficulty-value"></span>
-					<span class="option-ticker" onmousedown="Options.hold(this);" onmouseup="Options.release();">+</span>
-				</span>
+				<div class="option-group" id="volume-group">
+					Volume:
+					<span class="option-control" id="volume-control" data-option="volume" data-speed="10">
+						<span class="option-ticker" onmousedown="Options.hold(this);" onmouseup="Options.release();">-</span>
+						<span id="volume-value"></span>
+						<span class="option-ticker" onmousedown="Options.hold(this);" onmouseup="Options.release();">+</span>
+					</span>
+				</div>
+
+				<div class="option-group" id="difficulty-group">
+					Difficulty:
+					<span class="option-control" id="difficulty-control" data-option="difficulty" data-speed="100">
+						<span class="option-ticker" onmousedown="Options.hold(this);" onmouseup="Options.release();">-</span>
+						<span id="difficulty-value"></span>
+						<span class="option-ticker" onmousedown="Options.hold(this);" onmouseup="Options.release();">+</span>
+					</span>
+				</div>
 
 				<a href="#" class="menu-button" id="options-close" onclick="return Menu.CloseOptions();">Close</a><br>
 			</div>
