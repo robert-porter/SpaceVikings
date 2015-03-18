@@ -1,24 +1,8 @@
-﻿
-
-function AudioBank(file, count) {
-	this.bank = [];
-	for(var i = 0; i < count; i++) {
-		this.bank[i] = new Audio(file);
-	}
-	this.last = 0;
-}
-
-AudioBank.prototype.play = function() {
-	this.last = (this.last + 1) % this.bank.length;
-	this.bank[this.last].play();
-}
-
-var InvadersGroup = {
-
+﻿var InvadersGroup = {
 	LEFT: 0,
-    RIGHT: 1,
-    DOWN_TO_LEFT: 2,
-    DOWN_TO_RIGHT: 3,
+	RIGHT: 1,
+	DOWN_TO_LEFT: 2,
+	DOWN_TO_RIGHT: 3,
 	
 	NUM_ROWS: 5,
 	NUM_COLS: 11,
@@ -30,126 +14,159 @@ var InvadersGroup = {
 	HORIZONTAL_MOVEMENT: 20, // should be a multiple the of size of an invader cell 
 	VERTICAL_MOVEMENT: 20, // does not need to be a multiple the of size of an invader cell 
 	
-	dir:0,
-	moveInterval: 1000,
+	dir: 0,
 	moveStart: Date.now(),
 	numMoves: 0,
-	posX: 40,
-	posY: 0,
+	posX: 20,
+	posY: 20,
 	
-	audio: [new AudioBank("audio/snd1.mp3", 4),
-			new AudioBank("audio/snd2.mp3", 4),
-			new AudioBank("audio/snd3.mp3", 4),
-			new AudioBank("audio/snd4.mp3", 4)	],
-	currentAudio: 0,
+	audio: new SoundBank([
+		"audio/move_1.mp3",
+		"audio/move_2.mp3",
+		"audio/move_3.mp3",
+		"audio/move_4.mp3"
+	]),
 	invaders: [],
+	sprites: [3, 2, 2, 1, 1],
 
 	init: function() {
-		this.moveInterval = 1000;
+		InvadersGroup.createInvaders();
+
+		this.moveInterval = (13 - Game.difficulty) * 170;
 		this.moveStart = Date.now();
 		this.numMoves = 0;
 		this.dir = 0;
 		
 		for(var y = 0; y < this.NUM_ROWS; y++) {
-			for (var x = 0; x < this.NUM_COLS; x++) {
+			for(var x = 0; x < this.NUM_COLS; x++) {
 				this.invaders[x + y * this.NUM_COLS] = true;
 			}
 		}
 		
-		this.posX = 0;
-		this.posY = 0;
-		
-		this.sprite = new Image();
-		this.sprite.src = "test.png";
+		for(var i = 0; i < this.NUM_ROWS; i++) {
+			this.sprites[i] = new Sprite({
+				path: "images/Invader_" + this.sprites[i] + ".png",
+				type: "spritesheet",
+				width: 32,
+				height: 32,
+				sheet_width: 4,
+				sheet_height: 1
+			});
+		}
 	},
-	createInvaders: function(){
-		this.invaders = [];
-		
+	createInvaders: function() {
 		for(var y = 0; y < this.NUM_ROWS; y++) {
-			for (var x = 0; x < this.NUM_COLS; x++) {
+			for(var x = 0; x < this.NUM_COLS; x++) {
 				this.invaders[x + y * this.NUM_COLS] = true;
 			}
 		}
 	},
 	bulletCollision: function(bullet) {
-		
-		if(bullet.dead)
+		if(bullet.dead) {
 			return;
+		}
 		
 		for(var y = 0; y < this.NUM_ROWS; y++) {
-			for (var x = 0; x < this.NUM_COLS; x++) {
-				
+			for(var x = 0; x < this.NUM_COLS; x++) {
 				if(this.invaders[x + y * this.NUM_COLS]) {
 					var invaderX = this.posX + x * this.CELL_WIDTH + (this.INVADER_WIDTH - this.CELL_WIDTH) / 2;
 					var invaderY = this.posY + y * this.CELL_HEIGHT + (this.INVADER_HEIGHT - this.CELL_HEIGHT) / 2;
 					var gameObject = new GameObject(invaderX, invaderY, this.INVADER_WIDTH, this.INVADER_HEIGHT);
 					
-					if (intersect(gameObject, bullet)) {
+					if(intersect(gameObject, bullet)) {
 						this.invaders[x + y * this.NUM_COLS] = false;
 						bullet.dead = true;
-						Game.points += 20;
+
+						//More points for back rows; matches original Space Invaders scoring on difficulty 5
+						switch(y) {
+							case 4:
+							case 3:
+								Game.points += 2 * Game.difficulty;
+							break;
+
+							case 2:
+							case 1:
+								Game.points += 4 * Game.difficulty;
+							break;
+
+							case 0:
+								Game.points += 8 * Game.difficulty;
+							break;
+						}
 					}
 				}
 				
 			}
 		}
 	},
-	invadersInFront: function(col, row) {
-		for(var y = this.NUM_ROWS-1; y > row; y--) {
-			if(!this.invaders[col + y * this.NUM_COLS])
-				return true;
-		}
-		return false;
-	},
 	tryShoot: function(deltaTime) {
+		var shotchance = 0.05;
+
+		//Avoid putting the player to sleep on difficulty 1-2
+		if(Game.difficulty < 3) {
+			shotchance = 0.1;
+		}
+
 		// first one in each row get a chance to shoot.  
-		for (var x = 0; x < this.NUM_COLS; x++) {
-			for(var y = this.NUM_ROWS-1; y >= 0; y--) {
+		for(var x = 0; x < this.NUM_COLS; x++) {
+			var adjusted_chance = shotchance;
+
+			for(var y = this.NUM_ROWS - 1; y >= 0; y--) {
 				var index = x + y * this.NUM_COLS;
+
 				if(this.invaders[index]) {
-					if(Math.random() < 0.05) {
-						
+					//Closer rows shoot more often
+					adjusted_chance += y * 0.01;
+
+					if(Math.random() < adjusted_chance) {
 						var bulletX = this.posX + x * this.CELL_WIDTH + (this.INVADER_WIDTH - this.CELL_WIDTH) / 2 + this.INVADER_WIDTH / 2;
 						var bulletY = this.posY + y * this.CELL_HEIGHT + (this.INVADER_HEIGHT - this.CELL_HEIGHT) / 2 + this.INVADER_HEIGHT / 2;
 						var invaderBullet = new InvaderBullet(bulletX, bulletY);
 						Game.invaderBullets.push(invaderBullet);
 					}
+
 					break;
 				}
 			}
 		}		
 	},
 	getLeftBoundaryXIndex: function() { 
-		for (var x = 0; x < this.NUM_COLS; x++) {
+		for(var x = 0; x < this.NUM_COLS; x++) {
 			for(var y = this.NUM_ROWS-1; y >= 0; y--) {
 				var index = x + y * this.NUM_COLS;
+
 				if(this.invaders[index]) {
 					return x;
 				}
 			}
 		}
+
 		return -1;
 	},
 	getRightBoundaryXIndex: function() {
-		for (var x = this.NUM_COLS-1; x >= 0; x--) {
+		for(var x = this.NUM_COLS-1; x >= 0; x--) {
 			for(var y = this.NUM_ROWS-1; y >= 0; y--) {
 				var index = x + y * this.NUM_COLS;
+
 				if(this.invaders[index]) {
 					return x;
 				}
 			}
 		}
+
 		return -1;
 	},
 	getBottomBoundaryYIndex: function() {
 		for(var y = this.NUM_ROWS-1; y >= 0; y--) {
-			for (var x = 0; x < this.NUM_COLS; x++) {
+			for(var x = 0; x < this.NUM_COLS; x++) {
 				var index = x + y * this.NUM_COLS;
+
 				if(this.invaders[index]) {
 					return y;
 				}
 			}
 		}
+
 		return -1;
 	},
 	allDead: function() {
@@ -158,14 +175,15 @@ var InvadersGroup = {
 				return false;
 			}
 		}
+
 		return true;
 	},
 	move: function(deltaTime) {
-		this.currentAudio = (this.currentAudio + 1) % this.audio.length;
-		this.audio[this.currentAudio].play();
-		
 		var leftIndex = this.getLeftBoundaryXIndex();
 		var rightIndex = this.getRightBoundaryXIndex();
+
+		this.audio.playNext();
+		
 		if(this.posX + leftIndex * this.CELL_WIDTH <= this.HORIZONTAL_MOVEMENT && this.dir != this.RIGHT) {
 			this.dir = this.DOWN_TO_RIGHT;
 		}
@@ -175,18 +193,15 @@ var InvadersGroup = {
 		}
 		
 		
-		if (this.dir == this.RIGHT) {
+		if(this.dir == this.RIGHT) {
 			this.posX += this.HORIZONTAL_MOVEMENT; 
-		}
-		else if (this.dir == this.LEFT) {
+		} else if(this.dir == this.LEFT) {
 			this.posX -= this.HORIZONTAL_MOVEMENT;
-		}
-		else if (this.dir == this.DOWN_TO_LEFT)  {
+		} else if(this.dir == this.DOWN_TO_LEFT)  {
 			this.posY += this.VERTICAL_MOVEMENT; 
 			this.dir = this.LEFT;
 			this.moveInterval = this.moveInterval * 0.85;
-		}							
-		else if(this.dir == this.DOWN_TO_RIGHT) {
+		} else if(this.dir == this.DOWN_TO_RIGHT) {
 			this.posY += this.VERTICAL_MOVEMENT;
 			this.dir = this.RIGHT;
 			this.moveInterval = this.moveInterval * 0.85;
@@ -194,9 +209,11 @@ var InvadersGroup = {
 		
 		this.tryShoot();
 		
+		for(var i = 0; i < this.NUM_ROWS; i++) {
+			this.sprites[i].step();
+		}
 	},
 	update: function(deltaTime) {
-
 		var now = Date.now();
 		var moveTime = now - this.moveStart;
 		
@@ -204,21 +221,17 @@ var InvadersGroup = {
 			this.move();
 			this.moveStart = now;
 		}
-		
-
 	}, 
 	draw: function() {
 		for(var y = 0; y < this.NUM_ROWS; y++) {
-			for (var x = 0; x < this.NUM_COLS; x++) {
+			for(var x = 0; x < this.NUM_COLS; x++) {
 				if(this.invaders[x + y * this.NUM_COLS]) {
-
 					var invaderX = this.posX + x * this.CELL_WIDTH + (this.INVADER_WIDTH - this.CELL_WIDTH) / 2;
 					var invaderY = this.posY + y * this.CELL_HEIGHT + (this.INVADER_HEIGHT - this.CELL_HEIGHT) / 2;
 					
-					View.ctx.drawImage(this.sprite, invaderX, invaderY, this.INVADER_WIDTH, this.INVADER_HEIGHT);
+					this.sprites[y].draw(View.ctx, invaderX, invaderY);
 				}
 			}
 		}
 	}
 };
-

@@ -1,23 +1,94 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Simple Canvas Game</title>
-    <link rel="stylesheet" type="text/css" href="app.css">
-</head>
-<body>
+	<head>
+		<meta charset="utf-8">
+		<title>Space Vikings</title>
+		<link href="app.css" rel="stylesheet" type="text/css">
+		<link href="http://fonts.googleapis.com/css?family=Merriweather:400,900,700" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<div id="game-wrapper">
+			<div id="menu">
+				<img src="images/Title.png" id="title">
+				<div class="menu-button" id="play" onclick="return Menu.Play();">Play</div><br>
+				<div class="menu-button" id="options" onclick="return Menu.Options();">Options</div><br>
+				<div class="menu-button" id="credits" onclick="return Menu.Credits();">Credits</div><br>
+			</div>
 
-    <script src="js/game_object.js"></script>
-    <script src="js/bullet.js"></script>
-	<script src="js/invader_bullet.js"></script>
-    <script src="js/invader.js"></script>
-    <script src="js/player.js"></script>
-    <script src="js/bunker.js"></script>
-	<script src="js/bonus_ship.js"></script>
-	<script src="js/spawner.js"></script>
-	<script src="js/game.js"></script>
-    <script src="js/app.js"></script>
-	
+			<div id="options-overlay" class="overlay">
+				<div class="option-group" id="volume-group">
+					Volume:
+					<span class="option-control" id="volume-control" data-option="volume" data-speed="10">
+						<span class="option-ticker" onmousedown="Options.hold(this);" onmouseup="Options.release();">-</span>
+						<span id="volume-value"></span>
+						<span class="option-ticker" onmousedown="Options.hold(this);" onmouseup="Options.release();">+</span>
+					</span>
+				</div>
 
-</body>
+				<div class="option-group" id="difficulty-group">
+					Difficulty:
+					<span class="option-control" id="difficulty-control" data-option="difficulty" data-speed="100">
+						<span class="option-ticker" onmousedown="Options.hold(this);" onmouseup="Options.release();">-</span>
+						<span id="difficulty-value"></span>
+						<span class="option-ticker" onmousedown="Options.hold(this);" onmouseup="Options.release();">+</span>
+					</span>
+				</div>
+
+				<a href="#" class="menu-button" id="options-close" onclick="return Menu.Close(this);">Close</a><br>
+			</div>
+
+			<div id="credits-overlay" class="overlay">
+				<div id="credits-intro">
+					Space Vikings was made by the <a target="_blank" href="http://www.reddit.com/r/MakeAVideoGame">/r/MakeAVideoGame</a> team as its revival debut. All code is licensed under the BSD 3-Clause License and is <a target="_blank" href="https://github.com/MAVG-Programmers/SpaceVikings">available on GitHub</a>.
+				</div>
+
+				<div class="credits-title">Programming:</div>
+				<div class="credits-names">
+					<a target="_blank" href="https://github.com/Hydrothermal">Hydrothermal</a>
+					&bull;
+					<a target="_blank" href="https://github.com/Belbertn">Belbertn</a>
+					&bull;
+					<a target="_blank" href="https://github.com/robert-porter">robert-porter</a>
+				</div>
+
+				<div class="credits-title">Design:</div>
+				<div class="credits-names">
+					<a target="_blank" href="https://github.com/Hydrothermal">Hydrothermal</a>
+					&bull;
+					<a target="_blank" href="https://github.com/Belbertn">Belbertn</a>
+					&bull;
+					<a target="_blank" href="http://daniometry.tumblr.com/">dan_the_ceiling_fan</a>
+					<br>
+					dannox
+					&bull;
+					Momma-Says
+				</div>
+
+				<div class="credits-title">Art:</div>
+				<div class="credits-names">
+					<a target="_blank" href="https://github.com/Hydrothermal">Hydrothermal</a>
+					&bull;
+					<a target="_blank" href="http://daniometry.tumblr.com/">dan_the_ceiling_fan</a>
+
+					<div id="background-credit">
+						Background: Supernova Remnant Cassiopeia A, from <a target="_blank" href="http://hubblesite.org/gallery/album/entire/pr2006030b/">hubblesite.org</a>.
+					</div>
+				</div>
+
+				<div class="menu-button" id="options-close" onclick="return Menu.Close(this);">Close</div><br>
+			</div>
+		</div>
+		<script src="js/game_object.js"></script>
+		<script src="js/sound.js"></script>
+		<script src="js/sprite.js"></script>
+		<script src="js/bullet.js"></script>
+		<script src="js/invader_bullet.js"></script>
+		<script src="js/invader.js"></script>
+		<script src="js/player.js"></script>
+		<script src="js/bunker.js"></script>
+		<script src="js/bonus_ship.js"></script>
+		<script src="js/spawner.js"></script>
+		<script src="js/game.js"></script>
+		<script src="js/app.js"></script>
+	</body>
 </html>
