@@ -246,6 +246,11 @@ var Menu = {
 		Game.isRunning = false;
 		document.getElementById("menu").style.display = "block";
 	},
+	Close: function(btn) {
+		btn.parentNode.style.display = "none";
+
+		return false;
+	},
 	Play: function() {
 		document.getElementById("menu").className = "fade";
 		
@@ -259,16 +264,13 @@ var Menu = {
 		return false;
 	},
 	Options: function() {
-		document.getElementById("options-menu").style.display = "block";
-
-		return false;
-	},
-	CloseOptions: function() {
-		document.getElementById("options-menu").style.display = "none";
+		document.getElementById("options-overlay").style.display = "block";
 
 		return false;
 	},
 	Credits: function() {
+		document.getElementById("credits-overlay").style.display = "block";
+
 		return false;
 	}
 };

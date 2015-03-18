@@ -68,7 +68,7 @@ canvas {
 	opacity: 1;
 }
 
-#options-menu {
+.overlay {
 	position: absolute;
 	top: 0px;
 	left: 0px;
@@ -147,4 +147,32 @@ canvas {
 #difficulty-value {
 	display: inline-block;
 	width: 40px;
+}
+
+#credits-overlay a {
+	color: #50a;
+	text-decoration: none;
+}
+#credits-overlay a:hover {
+	color: #60a;
+	text-decoration: underline;
+}
+
+#credits-intro {
+	margin: 15px;
+	font-size: 16px;
+}
+
+.credits-title {
+	font-size: 30px;
+	margin-left: 50px;
+	width: 500px;
+	border-bottom: 2px solid #fff;
+	margin-bottom: 6px;
+	padding-bottom: 2px;
+}
+
+.credits-names {
+	font-weight: normal;
+	font-size: 22px;
 }
