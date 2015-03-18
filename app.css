@@ -19,7 +19,7 @@ canvas {
 
 .menu-button {
 	display: inline-block;
-	margin-bottom: 20px;
+	margin-bottom: 30px;
 	background-color: #5FAF64;
 	color: #fff;
 	font-weight: bold;
@@ -57,8 +57,8 @@ canvas {
 	opacity: 0;
 }
 
-#play {
-	margin-top: 140px;
+#title {
+	margin-top: 50px;
 }
 
 #game-canvas {
